@@ -6,3 +6,10 @@
 install.packages("raster")
 
 library(raster)
+
+
+# we are going to import satellite data
+# object cannot be number
+l2011 <- brick("p224r63_2011.grd")
+
+
