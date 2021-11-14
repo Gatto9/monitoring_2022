@@ -14,7 +14,7 @@ setwd("C:/lab/")
 
 l2011 <- brick("p224r63_2011.grd")
 
-#brick function to import a satellite immage
+# we use brick function to import a satellite immage
 #rasterbrick is a multilayer function
 l2011
 
@@ -111,8 +111,28 @@ plot(l2011$B4_sre, col=clnir)
 
 dev.off()
 
+
 par(mfrow=c(2,2))
-plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin") # natural colours
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin") # false colours
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin") # false colours
+plotRGB(l2011, r=3, g=4, b=2, stretch="Lin") # false colours
+
+par(mfrow=c(2,2))
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin") # natural colours
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin") # false colours
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin") # false colours
+plotRGB(l2011, r=3, g=4, b=2, stretch="Lin") # false colours
+
+
+#----------------------FINAL DAY ON THIS CODE TROPICAL FOREST RESERVE
+# Showcasing project monitor the change of biodiversity in farmlands in Europe, how agriculture is impacting the biodiversity over the all european countries, taken drone's immages 
+
+# reflectants is the ratio between the reflected waveland, the amount of reflected energy and the incoming energy. if it is evrything absorbed we'll achieve 0, if everything is reflect we'll achieve 1. we'll consider only the range between 0,  4 to 0,7
+
 plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
-plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")
-plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(l2011, r=4, g=3, b=2, stretch="Hist")
+
+#importing past data
+l1988brick("p224r63 1988.grd")
+
