@@ -134,5 +134,17 @@ plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(l2011, r=4, g=3, b=2, stretch="Hist")
 
 #importing past data
-l1988brick("p224r63 1988.grd")
+l1988 <- brick("p224r63 1988.grd")
+l1998 #to see the values of the data packages (class, dimension, resolution and so on)
+
+par(mfrow=c(2,1))
+plotRGB(l1998, r=4, g=3, b=2, stretch="Lin")
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
+
+# Put the NIR in the blue channel
+
+plotRGB(l1998, r=2, g=3, b=4, stretch="Lin")
+plotRGB(l2011, r=2, g=3, b=4, stretch="Lin")
+
+
 
