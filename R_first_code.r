@@ -5,6 +5,10 @@
 water <- c(100, 200, 300, 400, 500)
 water
 
+
+# Arrays are the R data objects which can store data in more than two dimensions
+
+
 # Marta data on fishes genomes
 fishes <- c(10, 50, 60, 100, 200)
 fishes
@@ -19,10 +23,10 @@ plot(water, fishes)
 stream <- data.frame(water, fishes)
 stream
 
-#From now on, we are going to import and/or export data!
-#setwd for Windows
-#setwd (setting work directory)
-#getwd (what is the directory)
+# From now on, we are going to import and/or export data!
+# setwd for Windows
+# setwd (setting work directory)
+# getwd (what is the directory)
 
 setwd(C:/lab/)
 water <- c(100, 200, 300, 400, 500)
@@ -45,17 +49,17 @@ write.table(streams, file="my_first_table.txt)
 some colleagues did send us a table How to import in R
 read.table("my first_table.txt")
 
-#let's assign it to an object inside R
+# let's assign it to an object inside R
 simonetable <- read.table("my_first_table.txt")
 
-#the first statistics for lazy beautiful people
+# the first statistics for lazy beautiful people
  summary (simonetable)
 
-#marta don't like the water
-#marta want to get info only on fishes
+# marta don't like the water
+# marta want to get info only on fishes
 summary(simonetable$fishes)
 
-#histogram
+# histogram
 hist (simonetable$fishes)
 hist (simonetable$water)
 
