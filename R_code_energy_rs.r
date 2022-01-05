@@ -25,7 +25,7 @@ plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 
-
+# lesson of friday 19/11
 
 
 
