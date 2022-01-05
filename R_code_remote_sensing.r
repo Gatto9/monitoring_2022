@@ -7,7 +7,7 @@ install.packages("raster")
 
 library(raster)
 
-setwd("C:/lab/")
+setwd("/Users/macdisimonegatto/Documents/R/lab")
 
 # we are going to import satellite data
 # object cannot be number
@@ -15,14 +15,14 @@ setwd("C:/lab/")
 l2011 <- brick("p224r63_2011.grd")
 
 # we use brick function to import a satellite immage
-#rasterbrick is a multilayer function
+# rasterbrick is a multilayer function
 l2011
 
 plot(l2011)
 
-#B1 us the reflectance in the blue band
-#B2 us the reflectance in the green band
-#B3 us the reflectance in the red band
+# B1 us the reflectance in the blue band
+# B2 us the reflectance in the green band
+# B3 us the reflectance in the red band
 
 
 colorRampPalette(c("black","grey","light grey"))(100) 
@@ -106,7 +106,7 @@ plot(l2011$B2_sre, col=clr)
 clg <- colorRampPalette(c("dark green", "green", "light green"))(100)
 plot(l2011$B3_sre, col=clg)
 
-clnir <- colorRampPalette(c("red","orange", "yellow"))(100)
+clnir <- colorRampPalette(c("dark red","orange", "yellow"))(100)
 plot(l2011$B4_sre, col=clnir)
 
 dev.off()
@@ -133,7 +133,8 @@ plotRGB(l2011, r=3, g=4, b=2, stretch="Lin") # false colours
 plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(l2011, r=4, g=3, b=2, stretch="Hist")
 
-#importing past data
+# importing past data
+
 l1988 <- brick("p224r63 1988.grd")
 l1998 #to see the values of the data packages (class, dimension, resolution and so on)
 
