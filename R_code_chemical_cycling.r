@@ -86,6 +86,8 @@ plot(EN$EN_0001, col=cl)
 # let's do somethings with RGB
 plotRGB(EN, r=1, g=7, b=13, stretch="lin")
 
+# image from sentinel-5P Nitrogen Dioxide tropospheric column 
+
 # in the red we put the very first begining of lockdown, jaunary image
 # in the green the mid part of lockdown, in febraury. all the part which will become red will represent the highest value of NO2 in febraury
 # in the blue we put the end of the lockdown, march everything which will become blue will be with highest value of NO2 in the 13nt image
