@@ -10,7 +10,7 @@ library(rgdal)
 # Set the working directory
 # setwd("~/lab/") # Linux
 # setwd("C:/lab/") # windows
-setwd("/Users/madisimonegatto/Document/R/lab/") # mac
+setwd("/Users/macisimonegatto/Documents/R/lab/") # mac
 
 # importing the data
 l1992 <- brick("defor1.jpg") # image of 1992
