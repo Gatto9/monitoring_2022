@@ -6,7 +6,7 @@ library(raster)
 # Set the working directory
 # setwd("~/lab/en") # Linux
 # setwd("C:/lab/en") # windows
-setwd("/Users/macisimonegatto/Documents/R/lab/en") # mac
+setwd("/Users/macisimonegatto/Desktop/lab/en") # mac
 
 en01 <- raster("EN_0001.png")
 # what is the range of the data
