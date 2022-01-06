@@ -30,11 +30,10 @@ stream
 
 setwd("/Users/macdisimonegatto/Desktop/lab/")
 water <- c(100, 200, 300, 400, 500)
-> 
 
-> stream <- data.frame(water, fishes)
-> stream
-  water fishes
+stream <- data.frame(water, fishes)
+stream
+water fishes
 1   100     10
 2   200     50
 3   300     60
