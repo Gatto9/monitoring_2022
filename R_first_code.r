@@ -28,7 +28,7 @@ stream
 # setwd (setting work directory)
 # getwd (what is the directory)
 
-setwd("/Users/name/lab/")
+setwd("/Users/macdisimonegatto/Documents/lab/")
 water <- c(100, 200, 300, 400, 500)
 > 
 
