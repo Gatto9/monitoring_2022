@@ -86,6 +86,8 @@ plotRGB(l2006, r=3, g=2, b=3, stretch="Lin")
 # the two images in infrared represt the amount of energy that there are in the system and it had and lost in the present
 # the images fifth images represent final amount of the energy which has been lost
 
+
+# pdf() function to export the output of our code
 pdf("energy.pdf")
 par(mfrow= c(3,2))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
