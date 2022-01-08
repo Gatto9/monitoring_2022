@@ -60,6 +60,10 @@ plot(EN11, col=cl)
 plot(EN12, col=cl)
 plot(EN13, col=cl)
 
+
+# stacking vectors concatenate multiple vectors into a single vector along
+## with a factor indicating where each obserbation originated.
+### Unstating reverses this operation
 # we use the stack function to create a plot of all the images
 
 EN <- stack(EN01, EN02, EN03, EN04, EN05, EN06, EN07, EN08, EN09, EN10, EN11, EN12, EN13)
@@ -94,6 +98,217 @@ plotRGB(EN, r=1, g=7, b=13, stretch="lin")
 # the white on the image represent all the time that NO2 was present in whole lockdown, from jaunary to march.
 # in the pianura padana remain the highest value of NO2 during the entire lockdown
 
+
+# importing all the data together with the lapply function
+
+rlist <- list_file(pattern="EN") 
+rlist
+
+## [1] "EN_0001.png" "EN_0002.png" "EN_0003.png" "EN_0004.png" "EN_0005.png" "EN_0006.png"
+## [7] "EN_0007.png" "EN_0008.png" "EN_0009.png" "EN_0010.png" "EN_0011.png" "EN_0012.png"
+## [13] "EN_0013.png"
+
+list_rast <-lapply(raster, rlist)
+list_rast
+
+## [[1]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0001.png
+## names : EN_0001
+## values : 0, 255 (min, max)
+##
+##
+## [[2]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0002.png
+## names : EN_0002
+## values : 0, 255 (min, max)
+##
+##
+## [[3]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0003.png
+## names : EN_0003
+## values : 0, 255 (min, max)
+##
+##
+## [[4]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0004.png
+## names : EN_0004
+## values : 0, 255 (min, max)
+##
+##
+## [[5]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+
+## source : EN_0005.png
+## names : EN_0005
+## values : 0, 255 (min, max)
+##
+##
+## [[6]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0006.png
+## names : EN_0006
+## values : 0, 255 (min, max)
+##
+##
+## [[7]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0007.png
+## names : EN_0007
+## values : 0, 255 (min, max)
+##
+##
+## [[8]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0008.png
+## names : EN_0008
+## values : 0, 255 (min, max)
+##
+##
+## [[9]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0009.png
+## names : EN_0009
+## values : 0, 255 (min, max)
+##
+##
+## [[10]]
+
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0010.png
+## names : EN_0010
+## values : 0, 255 (min, max)
+##
+##
+## [[11]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0011.png
+## names : EN_0011
+## values : 0, 255 (min, max)
+##
+##
+## [[12]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0012.png
+## names : EN_0012
+## values : 0, 255 (min, max)
+##
+##
+## [[13]]
+## class : RasterLayer
+## band : 1 (of 3 bands)
+## dimensions : 432, 768, 331776 (nrow, ncol, ncell)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## source : EN_0013.png
+## names : EN_0013
+## values : 0, 255 (min, max)
+
+
+
+
+EN_stack <- stack(list_rast)
+EN_stack
+
+## class : RasterStack
+## dimensions : 432, 768, 331776, 13 (nrow, ncol, ncell, nlayers)
+## resolution : 1, 1 (x, y)
+## extent : 0, 768, 0, 432 (xmin, xmax, ymin, ymax)
+## crs : NA
+## names : EN_0001, EN_0002, EN_0003, EN_0004, EN_0005, EN_0006, EN_0007, EN_0008, EN_0009, EN_0010, EN_0011, EN_0012, EN_0013
+## min values : 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+## max values : 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255
+
+
+cl <- colorRampPalette(c('red','orange','yellow'))(100) 
+
+plot(EN_stack, col=cl)
+
+
+ # Exercise plot only the first image of the stack
+plot(EN_stack$EN_0001, col=cl)
+
+# difference the first image with the last 
+
+ENdif <- EN_stack$EN_0001 - EN_stack$EN_0013
+cldif <- colorRampPalette(c('blue','white','red'))(100) #
+plot(ENdif, col=cldif)
+
+# the higest change in the two sets are in red, so all the red part has big change 
+## all the blue part where more or less have a countrary change so mantaining hard of NO2.
+### this is the file terrify image.
+#### it is nice that the bar showing me the highest value in jaunary are in red 
+###### the highest values in march are in blue
+
+
+
+# automated processing source function
+source("name_of_your_file.r")
+# we use this function to recall a code from a folder stored in our computer or from the web
 
 
 
