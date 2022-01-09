@@ -14,6 +14,7 @@ library(ggplot2)
 # ggplot can be used to declare the input data frame for a graphic
 ## specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden.
 
+library(gridExtra)
 
 setwd("/Users/macdisimonegatto/Desktop/lab")
 
