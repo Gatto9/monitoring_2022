@@ -4,50 +4,47 @@
 
 library(raster)
 ## Loading required package: sp
-
 library(rgdal)
 
 # Set the working directory
 # setwd("~/lab/") # Linux
 # setwd("C:/lab/") # windows
-setwd("/Users/macisimonegatto/Desktop/lab/") # mac
+setwd("/Users/macdisimonegatto/Desktop/lab/") # mac
 
 # importing the data
 l1992 <- brick("defor1.jpg") # image of 1992
-
+l2006 <- brick("defor2.jpg") # image of 2006
+l2006 
 l1992
-# information about the image
+# information about the image (name, dimension, pixels, source etc.)
 
 # plotRGB
-
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
+
 
 # name's Bands: defor1.1, defor1.2, defor1.3
 # defor1.1= NIR
 # defor1.2= Red
 # defor1.3= Green
 
-# inverting the NIR in the Green component what we'll see all fluo/green 
+# inverting the NIR in the Green component, what we'll see is all fluo/green 
 # this representing the forest with the near infrared mounted on the green component on the RGB 
-
-plotRGB(l1992, r=2, g=1, b=3, stretch="Lin")
-
+å
 # lesson of friday 19/11 
 ## lesson 2
 
 # we can see in rio pexoto the amount of solid inside the river is smaller
 # the amount of dispersed soil inside the river is smaller since here we can see that the river is blue in this case 
-# instead of white as in the other case
-# the water is absorbing the all NIR. it will became black when there is a complete absorbtion, pure water
+# instead of white as in the other case, cause the water is not pure, is brown more or less.
+# the water is absorbing the all NIR. it will became black when there is a complete absorbtion, pure water.
 
-# par
-
+# par() function
 par(mfrow=c(2,1))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
 
-# if we have 3 RGB layers of an images and want two use only two of we'll have a new layer called DVI 
-# which it'll have a new value for the pixel of forest that we are going to consider
+# if we have 3 RGB LAYERS of an images and want two use only two of them we'll have a new layer called DVI 
+# DVI will have a new value for the pixel of forest that we are going to consider
 
 # let's calculate energy in 1992
 # $ --> it is used to link the image with its internal band
@@ -75,7 +72,7 @@ plot(dvidif, col=cld)
 # all of the red part have a big loss of energy
 
 # final plot: original images, dvis, final dvi difference
-par(mfrow, c(3,2))
+par(mfrow= c(3,2))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
 plot(dvi1992, col=cl)
