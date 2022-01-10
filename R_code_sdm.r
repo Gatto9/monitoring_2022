@@ -31,14 +31,14 @@ species
 # how many occurence are there?
 species[species$Occurrence == 1,]    # this is a subset
 
-class       : SpatialPointsDataFrame 
-features    : 94 
-extent      : 110112, 593393, 4013700, 4275600  (xmin, xmax, ymin, ymax)
-crs         : +proj=utm +zone=30 +datum=WGS84 +units=m +no_defs 
-variables   : 1
-names       : Occurrence 
-min values  :          1 
-max values  :          1 
+# class       : SpatialPointsDataFrame 
+# features    : 94 
+# extent      : 110112, 593393, 4013700, 4275600  (xmin, xmax, ymin, ymax)
+# crs         : +proj=utm +zone=30 +datum=WGS84 +units=m +no_defs 
+# variables   : 1
+# names       : Occurrence 
+# min values  :          1 
+# max values  :          1 
 
 # how many occurence are there? 
 
