@@ -1,0 +1,17 @@
+# R code for uploading and visualizing Coprnicus data in R
+
+# install.packages("ncdf4")
+# install.packages("viridis")
+library(ncdf4)
+library(raster)
+library(RStoolbox)
+library(viridis)
+library(ggplot2)
+library(patchwork)
+
+setwd("/Users/macdisimonegatto/Desktop/copernicus/")
+
+
+snow20211214 <- raster("c_gls_SCE_202112140000_NHEMI_VIIRS_V1.0.1.nc")
+
+plot(snow20211214)
