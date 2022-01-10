@@ -13,7 +13,7 @@ en01 <- raster("EN_0001.png")
 
 cl <- colorRampPalette(c("red","orange","yellow"))(100) 
 
-#plot the NO2 values of January 2020 by the cl palette
+# plot the NO2 values of January 2020 by the cl palette
 
 plot(en01, col=cl)
 
