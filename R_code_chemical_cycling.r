@@ -1,12 +1,12 @@
-R code for chemical cycling study
-time series of NO2 change in Europe during the firs lockdown
+# R code for chemical cycling study
+# time series of NO2 change in Europe during the firs lockdown
 
 library(raster)
 
 # Set the working directory
 # setwd("~/lab/en") # Linux
 # setwd("C:/lab/en") # windows
-setwd("/Users/macisimonegatto/Desktop/lab/en") # mac
+setwd("/Users/macdisimonegatto/Desktop/lab/en") # mac
 
 en01 <- raster("EN_0001.png")
 # what is the range of the data
@@ -101,7 +101,7 @@ plotRGB(EN, r=1, g=7, b=13, stretch="lin")
 
 # importing all the data together with the lapply function
 
-rlist <- list_file(pattern="EN") 
+rlist <- list.files(pattern="EN") 
 rlist
 
 ## [1] "EN_0001.png" "EN_0002.png" "EN_0003.png" "EN_0004.png" "EN_0005.png" "EN_0006.png"
@@ -269,8 +269,6 @@ list_rast
 ## values : 0, 255 (min, max)
 
 
-
-
 EN_stack <- stack(list_rast)
 EN_stack
 
@@ -307,7 +305,7 @@ plot(ENdif, col=cldif)
 
 
 # automated processing source function
-source("name_of_your_file.r")
+source("name_of_your_file.txt") # generally the extention is txt
 # we use this function to recall a code from a folder stored in our computer or from the web
 
 
