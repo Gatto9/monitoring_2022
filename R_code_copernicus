@@ -62,18 +62,19 @@ scale_fill_viridis(option="viridis") + ggtitle("Snow cover during my birthday!")
 
 ggplot() +  geom_raster(swinter, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.2)) +  scale_fill_viridis(option="viridis") + ggtitle("Snow cover during freezing winter!")
 
+
 # let's patchwork them together
+# patchwork = a thing composed of many different elements so as to appear variegated.
 # assign this plot to an object (name it)
 
 p1 <- ggplot() + 
 geom_raster(ssummer, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.1)) +  scale_fill_viridis(option="viridis") +  ggtitle("Snow cover during my birthday!")
 
-p2 <- ggplot() +  
-geom_raster(swinter, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.2)) +  
-scale_fill_viridis(option="viridis") +  ggtitle("Snow cover during freezing winter!")
+p2 <- ggplot() +  geom_raster(swinter, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.2)) +  scale_fill_viridis(option="viridis")  +  ggtitle("Snow cover during freezing winter!")
 
 p1 / p2
 
+# crop returns a geographic subset of an object as specified by an Extent object
 # you can crop your image on a certain area
 
 # longitude from 0 to 20
@@ -86,16 +87,10 @@ ext <- c(0, 20, 30, 50)
 ssummer_cropped <- crop(ssummer, ext)
 swinter_cropped <- crop(swinter, ext)
 
-p1 <- ggplot() + 
-geom_raster(ssummer_cropped, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.1)) +
-scale_fill_viridis(option="viridis") +
-ggtitle("Snow cover during my birthday!")
+p1 <- ggplot() +  geom_raster(ssummer_cropped, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.1)) +  scale_fill_viridis(option="viridis") +  ggtitle("Snow cover the summer!")
 
 
-p2 <- ggplot() + 
-geom_raster(swinter_cropped, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.2)) +
-scale_fill_viridis(option="viridis") +
-ggtitle("Snow cover during freezing winter!")
+p2 <- ggplot() +  geom_raster(swinter_cropped, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent.2)) + scale_fill_viridis(option="viridis") + ggtitle("Snow cover during freezing winter!")
 
 p1 / p2
 
