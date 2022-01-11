@@ -81,5 +81,14 @@ points(presences, pch=19)
 plot(preds$precipitation, col=cl)
 points(presences, pch=19)
 
-
-
+                    
+# in the theroretical
+preds
+# these are the predictors: elevation, precipitation, temperature, vegetation
+# explain what are the data: use the sdmdata from sdm package
+# predictors can also named as explenatory variable
+datasdm(train= species predictors= preds)
+# sdm(formula, data, methods,...) the argument of sdm function
+										
+										
+										
