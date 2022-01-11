@@ -29,7 +29,7 @@ plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 
 # inverting the NIR in the Green component, what we'll see is all fluo/green 
 # this representing the forest with the near infrared mounted on the green component on the RGB 
-å
+
 # lesson of friday 19/11 
 ## lesson 2
 
