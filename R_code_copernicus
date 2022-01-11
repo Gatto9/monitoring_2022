@@ -9,7 +9,7 @@ library(viridis)
 library(ggplot2)
 library(patchwork)
 
-setwd("/Users/macdisimonegatto/Desktop/copernicus/")
+setwd("/Users/macdisimonegatto/Desktop//lab/copernicus/")
 
 
 snow20211214 <- raster("c_gls_SCE_202112140000_NHEMI_VIIRS_V1.0.1.nc")
@@ -23,21 +23,13 @@ plot(snow20211214, col=cl)
 cl <- colorRampPalette(c("blue","green","red"))(100)
 plot(snow20211214, col=cl)
 
-#########à
+#########
 # ggplot function
-ggplot() + 
-geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent))  
+ggplot() + geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent))  
 
 # ggplot function with viridis
-ggplot() + 
-geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) +
-scale_fill_viridis() 
+ggplot() + geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) + scale_fill_viridis() 
 
-ggplot() + 
-geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) +
-scale_fill_viridis(option="cividis") 
+ggplot() + geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) + scale_fill_viridis(option="cividis") 
 
-ggplot() + 
-geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) +
-scale_fill_viridis(option="cividis") + 
-ggtitle("cividis palette")
+ggplot() + geom_raster(snow20211214, mapping = aes(x=x, y=y, fill=Snow.Cover.Extent)) + scale_fill_viridis(option="cividis") + ggtitle("cividis palette")
