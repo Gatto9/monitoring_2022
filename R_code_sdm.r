@@ -89,6 +89,11 @@ preds
 # predictors can also named as explenatory variable
 datasdm(train= species predictors= preds)
 # sdm(formula, data, methods,...) the argument of sdm function
+m1 <- sdm(Occurrence~temperature + elevation + precipitation + vegetation, data=datasdm, methods="glms") # formula cannot wrote cause is default
+		    
 										
-										
-										
+
+		    
+		    
+		    
+		    
