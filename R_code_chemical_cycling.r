@@ -1,5 +1,5 @@
 # R code for chemical cycling study
-# time series of NO2 change in Europe during the firs lockdown
+# time series of NO2 change in Europe during the first lockdown
 
 library(raster)
 
@@ -108,7 +108,7 @@ rlist
 ## [7] "EN_0007.png" "EN_0008.png" "EN_0009.png" "EN_0010.png" "EN_0011.png" "EN_0012.png"
 ## [13] "EN_0013.png"
 
-list_rast <-lapply(raster, rlist)
+list_rast <-lapply(rlist, raster) # it works if you put in the argument name first and funciont the 2nd
 list_rast
 
 ## [[1]]
@@ -293,7 +293,7 @@ plot(EN_stack$EN_0001, col=cl)
 # difference the first image with the last 
 
 ENdif <- EN_stack$EN_0001 - EN_stack$EN_0013
-cldif <- colorRampPalette(c('blue','white','red'))(100) #
+cldif <- colorRampPalette(c('blue','white','red'))(100) 
 plot(ENdif, col=cldif)
 
 # the higest change in the two sets are in red, so all the red part has big change 
