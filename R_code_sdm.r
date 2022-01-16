@@ -62,7 +62,8 @@ path
 
 lst <- list.files(path=path,pattern='asc',full.names = TRUE)
 
-# we can use the lapplu function eoth the raster function but in this 
+# I can use the lapply function with the raster function but in this case it is not needed since the data are inside the package and they have an asc extension
+
 preds <- stack(lst)
 preds
 
@@ -82,18 +83,49 @@ plot(preds$precipitation, col=cl)
 points(presences, pch=19)
 
                     
-# in the theroretical
+# in the theroretical slide of SDMs we should use individuals of a scpecies and put
 preds
 # These are the predictors: elevation, precipitation, temperature, vegetation
 # explain what are the data: use the sdmdata from sdm package
 # predictors can also named as explenatory variable
-datasdm(train= species predictors= preds)
 
+datasdm <- sdmData(train= species, predictors= preds)
+
+# Fit and evaluate species distribution models
 # sdm(formula, data, methods,...) the argument of sdm function
-m1 <- sdm(Occurrence~temperature + elevation + precipitation + vegetation, data=datasdm, methods="glms") # formula cannot wrote cause is default
+# sdm: Fit and evaluate species distribution models
 
+# Tilde is used to separate the left- and right-hand sides in a model formula.
 
+# model
+m1 <- sdm(Occurrence~temperature + elevation + precipitation + vegetation, data=datasdm, methods="glm") # formula cannot wrote cause is default
 
+# what we have to do is a linear model like y= a(interseption) + b0x0 + b1 + x1...bnxn where the interseption is multiplied by the predictors
+# we take/check the formula of this model and we can predict where we can find the species based on this formula
+# prediction: is dividing our area in pixels and for each pixel based on the resolution of the input
+## predictors for each pixel it will report the probability of finding a certain species
+
+# prediction: map prabability
+p1 <- predict(m1, newdata=preds)
+plot(p1, col=cl)
+points(presences, pch=19) 
+
+# pch is any kind of point character type
+# in this case I can see some species predicted in a certain part with low probability to find a species
+## this due to the usage of some predictors, but maybe there may be some additional predictors that we are not considering
+### that's why we may have some small errors in a certain part
+
+# add to the stack
+s1 <- stack(preds, p1)
+plot(s1, col=cl)
+
+pdf("Presence prediction of a certain species")
+s1 <- stack(preds, p1)
+plot(s1, col=cl)
+dev.off()
+
+# It is possibile to change the name of the images with the name() function
+name(s1) <- c('elevation', 'precipitation', 'temperature', 'vegetation', 'model')
 
 
 
