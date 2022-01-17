@@ -54,11 +54,9 @@ import
 ## extent : -267676.7, 3313324, -1483987, 1475229 (xmin, xmax, ymin, ymax)
 ## crs : +proj=stere +lat_0=90 +lon_0=-33 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs
 ## source : lst_2005.tif
-
 ## names : lst_2005
 ## values : 0, 65535 (min, max)
-##
-##
+
 ## [[3]]
 ## class : RasterLayer
 ## dimensions : 1913, 2315, 4428595 (nrow, ncol, ncell)
@@ -68,8 +66,7 @@ import
 ## source : lst_2010.tif
 ## names : lst_2010
 ## values : 0, 65535 (min, max)
-##
-##
+
 ## [[4]]
 ## class : RasterLayer
 ## dimensions : 1913, 2315, 4428595 (nrow, ncol, ncell)
@@ -79,6 +76,7 @@ import
 ## source : lst_2015.tif
 ## names : lst_2015
 ## values : 0, 65535 (min, max)
+
 ## this VALUES means that are sixty bit images
 
 TGr <- stack(import)
@@ -96,22 +94,55 @@ TGr
 cl <- colorRampPalette(c("blue", "light blue" , "pink" , "yellow"))(100)
 plot(TGr)
 
-# ggplot of first and final images 2000 vs 2015
-ggplot() + geom_raster(TGr$lst_2000, mapping = aes(x=x, y=y, fill=lst_2000)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2000)
-ggplot() + geom_raster(TGr$lst_2005, mapping = aes(x=x, y=y, fill=lst_2005)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2005)
-ggplot() + geom_raster(TGr$lst_2010, mapping = aes(x=x, y=y, fill=lst_2010)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2010)
-ggplot() + geom_raster(TGr$lst_2015, mapping = aes(x=x, y=y, fill=lst_2015)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2015)
+# ggplot all the images
+ggplot() + geom_raster(TGr$lst_2000, mapping = aes(x=x, y=y, fill=lst_2000)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2000")
+ggplot() + geom_raster(TGr$lst_2005, mapping = aes(x=x, y=y, fill=lst_2005)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2005")
+ggplot() + geom_raster(TGr$lst_2010, mapping = aes(x=x, y=y, fill=lst_2010)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2010")
+ggplot() + geom_raster(TGr$lst_2015, mapping = aes(x=x, y=y, fill=lst_2015)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2015")
 
+# then assign a name to the ggplot and use the patchwork's function to easy plot
 
+p1 <- ggplot() + geom_raster(TGr$lst_2000, mapping = aes(x=x, y=y, fill=lst_2000)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2000")
+p2 <- ggplot() + geom_raster(TGr$lst_2005, mapping = aes(x=x, y=y, fill=lst_2005)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2005")
+p3 <- ggplot() + geom_raster(TGr$lst_2010, mapping = aes(x=x, y=y, fill=lst_2010)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2010")
+p4 <- ggplot() + geom_raster(TGr$lst_2015, mapping = aes(x=x, y=y, fill=lst_2015)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2015")
 
+# patchwork
+p1 + p2
+p1 / p3 # etc...
 
+# plotting frequency distribution of data
+par(mfrow=c(1,2))
+hist(TGr$lst_2000)
+hist(TGr$lst_2015)
 
+# comparing all the data
+par(mfrow=c(2,2)
+hist(TGr$lst_2000)
+hist(TGr$lst_2005)
+hist(TGr$lst_2010)
+hist(TGr$lst_2015)
 
+#dev.off()
+# stats in a simple manner
+plot(TGr$lst_2000, TGr$lst_2015)
 
+dev.off()
+plot(TGr$lst_2010, TGr$lst_2015, xlim=c(12500,25000), ylim=c(12500,15000))
+abline(0,1, col="red")
+     
+# make a plot with all the histograms and all the regressions foe all the variables
+par(mfrow=c(4,4))
+hist(TGr$lst_2000)
+hist(TGr$lst_2005)
+hist(TGr$lst_2010)
+hist(TGr$lst_2015)
+plot(TGr$lst_2010, TGr$lst_2015, xlim=c(12500,25000), ylim=c(12500,15000))
+plot(TGr$lst_2010, TGr$lst_2000, xlim=c(12500,25000), ylim=c(12500,15000))
+#... put al the data inside
 
-
-
-
+# this is the most simple way to do a comparison between data cause we made a stack previously and we can plot altogheter
+pairs(tgr)
 
 
 
