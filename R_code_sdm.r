@@ -1,21 +1,29 @@
+# R code for Species Distrubution Modelling, namely the distribution of individuals of a population in space
 # install.packages("sdm")
 # install.packages("rgdal")
 # install.packages(c("rgdal", "sdm") # an array to install different packages
 
-library(raster)
-library(rgdal)
+library(raster) # predictors
+library(rgdal) # species
 library(sdm)
 
 # species 
-# systemfile: this function is meant to intercept calls to system.file, so that it behaves well with packages loaded by devtools.
 
-file <- system.file("external/species.shp" , package="sdm" 
+
+# system.file: Find names of R system Files. Finds the full file names of file in packages etc.
+file <- system.file("external/species.shp" , package="sdm")
+# we are explaining to the software that the file comes out from the sdm package.
+# we are using quots since it's like exiting R, but it is really we are exiting the software
+## to enter the folder related to R
+
 file
-
+# shp -> is the extention called "shape file" which is used a lot in geo
 # "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/sdm/external/species.shp"
 # we are predicting the presence of a species in a certain period
 
 species <- shapefile(file) # exatcly as the raster function for raster files
+# shape file: read or write a shapefile 
+
 species
 
 # class       : SpatialPointsDataFrame 
@@ -26,6 +34,9 @@ species
 # names       : Occurrence 
 # min values  :          0 
 # max values  :          1 
+
+# plot the species
+plot(species, pch=19, col="red")
 
 
 # how many occurence are there?
