@@ -108,7 +108,7 @@ rlist
 ## [7] "EN_0007.png" "EN_0008.png" "EN_0009.png" "EN_0010.png" "EN_0011.png" "EN_0012.png"
 ## [13] "EN_0013.png"
 
-list_rast <-lapply(rlist, raster) # it works if you put in the argument name first and funciont the 2nd
+list_rast <-lapply(rlist, raster) # it works if you put in the argument name first and funcion the 2nd
 list_rast
 
 ## [[1]]
