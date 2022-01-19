@@ -32,7 +32,7 @@ setwd("/Users/macdisimonegatto/Desktop/lab/project")
 # i'm curious to see the cover fire in calabrian region during the 2021 summer
 fire <- raster("c_gls_BA300_202008010000_GLOBE_S3_V3.0.1.nc")
 
-cl <- colorRampPalette(c('red','yellow','green','black'))(100) 
+cl <- colorRampPalette(c('red','green','yellow'))(100) 
 
 
 # crop the file and take the south italy images
@@ -43,7 +43,13 @@ plot(fire_cropped, col=cl)
 
 ###########
 #NDVI 
-
+library(patchwork)
+library(raster)
+library(rgdal)
+library(RStoolbox)
+library(ggplot2)
+library(viridis)
+library(ncdf4)
 setwd("/Users/macdisimonegatto/Desktop/lab/project")
 
 rlist <- list.files(pattern="NDVI")
@@ -85,7 +91,6 @@ list_rast <- lapply(rlist, raster)
 # names      : Normalized.Difference.Vegetation.Index.333M 
 # zvar       : NDVI 
 
-
 vegetation <- stack(list_rast)
 # vegetation
 
@@ -101,10 +106,32 @@ a <- vegetation$Normalized.Difference.Vegetation.Index.333M.1
 b <- vegetation$Normalized.Difference.Vegetation.Index.333M.2
 c <- vegetation$Normalized.Difference.Vegetation.Index.333M.3 
 
+ext <- c(15.5, 18, 37.7, 40)
+
+cveg1 <- crop(a, ext)
+cveg1 <- crop(b, ext)
+cveg2 <- crop(c, ext)
+
 par(mfrow=c(1,3))
 plot(cveg)
 plot(cveg1)
 plot(cveg2)
+plot(Cvegdif)
+difcl <- colorRampPalette(c("darkblue","yellow","red","black"))(100)
+
+
 Cvegdif<-cveg-cveg1-cveg2
 
-
+napa <- unsuperClass(cveg, nClasses=2)
+napa
+# *************** Map ******************
+# $map
+# class      : RasterLayer 
+# dimensions : 772, 840, 648480  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : 15.49851, 17.99851, 37.70089, 39.99851  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : memory
+# names      : layer 
+# values     : 1, 2  (min, max)
+plot(napa$map)
