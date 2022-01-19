@@ -8,13 +8,15 @@
 # I can detect the temperature during that period
 # thank to special data i can see the smoke plumes of these fires
 
-install.packages(raster)
-install.packages(rgdal)
-install.packages(RStoolbox)
-install.packages(ggplot2)
-install.packages(viridis)
-install.packages(ncdf4)
-install.packages(patchwork)
+# install all the package you need 
+
+# install.packages("raster")
+# install.packages("rgdal")
+# install.packages("RStoolbox")
+# install.packages("ggplot2")
+# install.packages("viridis")
+# install.packages("ncdf4")
+# install.packages("patchwork")
 
 library(patchwork)
 library(raster)
@@ -27,6 +29,7 @@ library(ncdf4)
 
 setwd("/Users/macdisimonegatto/Desktop/lab/project")
 
+# i'm curious to see the cover fire in calabrian region during the 2021 summer
 fire <- raster("c_gls_BA300_202008010000_GLOBE_S3_V3.0.1.nc")
 
 cl <- colorRampPalette(c('red','yellow','green','black'))(100) 
@@ -37,5 +40,71 @@ ext <- c(15.5, 18, 37.7, 40)
 fire_cropped <- crop(fire, ext)
 plot(fire_cropped)
 plot(fire_cropped, col=cl)
+
+###########
+#NDVI 
+
+setwd("/Users/macdisimonegatto/Desktop/lab/project")
+
+rlist <- list.files(pattern="NDVI")
+rlist
+# [1] "c_gls_NDVI300_202007210000_GLOBE_PROBAV_V1.0.1.nc" 
+# [2] "c_gls_NDVI300_202008010000_GLOBE_PROBAV_V1.0.1.nc"
+# [3] "c_gls_NDVI300_202008110000_GLOBE_PROBAV_V1.0.1.nc"
+
+list_rast <- lapply(rlist, raster)
+# list_rast
+
+# [[1]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_202007210000_GLOBE_PROBAV_V1.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333M 
+# zvar       : NDVI 
+
+# [[2]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_202008010000_GLOBE_PROBAV_V1.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333M 
+# zvar       : NDVI  
+
+# [[3]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_202008110000_GLOBE_PROBAV_V1.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333M 
+# zvar       : NDVI 
+
+
+vegetation <- stack(list_rast)
+# vegetation
+
+#class      : RasterStack 
+#dimensions : 47040, 120960, 5689958400, 3  (nrow, ncol, ncell, nlayers)
+#resolution : 0.00297619, 0.00297619  (x, y)
+#extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+#crs        : +proj=longlat +datum=WGS84 +no_defs 
+#names      : Normalized.Difference.Vegetation.Index.333M.1, Normalized.Difference.Vegetation.Index.333M.2, Normalized.Difference.Vegetation.Index.333M.3 
+
+
+a <- vegetation$Normalized.Difference.Vegetation.Index.333M.1
+b <- vegetation$Normalized.Difference.Vegetation.Index.333M.2
+c <- vegetation$Normalized.Difference.Vegetation.Index.333M.3 
+
+par(mfrow=c(1,3))
+plot(cveg)
+plot(cveg1)
+plot(cveg2)
+Cvegdif<-cveg-cveg1-cveg2
 
 
