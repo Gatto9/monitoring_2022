@@ -57,7 +57,7 @@ plot(list_rast[[2]])
 # I give a name to the list and then i plotting the object
 l1992 <- list_rast[[1]]
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
-plot(1992[[1]])
+plot(l1992[[1]])
                      
 
 # Unsupervised clustering of Raster* data using kmeans clustering 
