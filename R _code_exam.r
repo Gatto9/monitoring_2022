@@ -108,7 +108,7 @@ c <- vegetation$Normalized.Difference.Vegetation.Index.333M.3
 
 ext <- c(15.5, 18, 37.7, 40)
 
-cveg1 <- crop(a, ext)
+cveg <- crop(a, ext)
 cveg1 <- crop(b, ext)
 cveg2 <- crop(c, ext)
 
