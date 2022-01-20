@@ -92,7 +92,7 @@ TGr
 ## max values : 65535, 65535, 65535, 65535
 
 cl <- colorRampPalette(c("blue", "light blue" , "pink" , "yellow"))(100)
-plot(TGr)
+plot(TGr, col=cl)
 
 # ggplot all the images
 ggplot() + geom_raster(TGr$lst_2000, mapping = aes(x=x, y=y, fill=lst_2000)) + scale_fill_viridis(option="magma")+ ggtitle("LST in 2000")
