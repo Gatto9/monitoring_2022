@@ -32,6 +32,10 @@ setwd("/Users/macdisimonegatto/Desktop/lab/project")
 # i'm curious to see the cover fire in calabrian region during the 2021 summer
 fire <- raster("c_gls_BA300_202008010000_GLOBE_S3_V3.0.1.nc")
 
+# Or importing all the files creating a list
+firelist <- list.files(pattern="BA")
+firelist
+
 cl <- colorRampPalette(c('red','green','yellow'))(100) 
 
 
