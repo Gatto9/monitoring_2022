@@ -117,7 +117,7 @@ hist(TGr$lst_2000)
 hist(TGr$lst_2015)
 
 # comparing all the data
-par(mfrow=c(2,2)
+par(mfrow=c(2,2))
 hist(TGr$lst_2000)
 hist(TGr$lst_2005)
 hist(TGr$lst_2010)
@@ -142,7 +142,8 @@ plot(TGr$lst_2010, TGr$lst_2000, xlim=c(12500,25000), ylim=c(12500,15000))
 #... put al the data inside
 
 # this is the most simple way to do a comparison between data cause we made a stack previously and we can plot altogheter
-pairs(tgr)
+pairs(TGr)
+
 
 
 
