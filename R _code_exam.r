@@ -80,7 +80,7 @@ rlist
 # [6] "c_gls_NDVI300_202108110000_GLOBE_OLCI_V2.0.1.nc"    
 # [7] "c_gls_NDVI300_202108210000_GLOBE_OLCI_V2.0.1.nc"  
 
-# applying a function to every image
+# applying raster function to every image for better and fast analysis
 list_rast <- lapply(rlist, raster)
 list_rast
 
@@ -163,7 +163,7 @@ list_rast
 # zvar       : NDVI 
 
 
-##  creation of a stack of this different rasterlayer 
+#  creation of a stack of this different rasterlayer 
 vegetation <- stack(list_rast)
 vegetation
 
@@ -184,8 +184,8 @@ vegetation
 
 names(vegetation)<- c("August_2014",  "July_21", "August_01",  "August_11", "August_fire_01", "August_fire_11", "August_fire_21")
 
-ext <- c(15.6, 16.4036, 37.8463, 38.4) # provincia di Reggio, Asprumunti.
-veg_cropped <- crop(vegetation, ext)
+extReggio <- c(15.6296, 16.1973, 37.9463, 38.2839) # provincia di Reggio, Asprumunti.
+veg_cropped <- crop(vegetation, extReggio)
 veg_cropped
 
 # class      : RasterBrick 
@@ -198,45 +198,56 @@ veg_cropped
 # min values :      -0.076,    -0.080,    -0.080,    -0.080,         -0.080,         -0.080,         -0.080 
 # max values :   0.9360001, 0.9360001, 0.9360001, 0.9360001,      0.9360000,      0.9360000,      0.9360000
 
-
+# plot the stack cropped to see all the images
 plot(veg_cropped)
-plot(veg_cropped$August_2014)
+
+
 # i'd obtain a plotting point to see the loss of vegetation in seven years
 plot(veg_cropped$August_2014, veg_cropped$August_fire_21)
-abline(0,1)
 abline(0,1, col="red")
 
-# assign a name for a multitemporal frame
+#
+plot(veg_cropped$August_fire_01, veg_cropped$August_fire_21)
+abline(0,1, col="red")
 
+# assign a name for a multitemporal analysis and better managing of the files
 Aug_08_2014 <- veg_cropped[[1]]
 Aug_01_2020 <- veg_cropped[[3]]
-Aug_21_2021 <- veg_cropped[[7]]
 Aug_01_2021 <- veg_cropped[[5]]
-#or
+Aug_21_2021 <- veg_cropped[[7]]
+# or
 Aug_08_2014 <- veg_cropped$August_2014
 Aug_01_2020 <- veg_cropped$August_01
 Aug_21_2021 <- veg_cropped$August_fire_21
 Aug_01_2021 <- veg_cropped$August_fire_01
 
-# zoom to a better vision of the point of interest
-extReggio <- c(15.7456, 16.1973, 37.9463, 38.2839) # provincia di Reggio, Asprumunti.
 
 temporal_stack <-stack(Aug_08_2014, Aug_01_2020, Aug_21_2021, Aug_01_2021)
-
+temporal_stack
+# class      : RasterStack 
+# dimensions : 114, 191, 21774, 4  (nrow, ncol, ncell, nlayers)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : 15.62946, 16.19792, 37.94494, 38.28423  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# names      : Aug_08_2014, Aug_01_2020, Aug_21_2021, Aug_01_2021 
+# min values :      -0.076,      -0.052,      -0.080,      -0.080 
+# max values :   0.9360001,   0.9360001,   0.9360000,   0.9360000 
 # the situation is dramatically compromised, we must do something
 # the people are out of their minds
 
 plot(Aug_08_2014)
+plot(Aug_01_2020)
 plot(Aug_01_2021)
 plot(Aug_21_2021)
 
-#create a palette first
+#createing a colors palettes
 clb<- colorRampPalette(c("darkblue","green","lightblue"))(100)
 clg<- colorRampPalette(c("darkgreen","green","lightgreen"))(100)
 rgBk<- colorRampPalette(c("red","green","black"))(100)
 
 #plot the images and assign the color
 
+####################### not necessary ####################
 par(mfrow=c(2,3))
 plot(Aug_08_2014, col=clb)
 plot(Aug_08_2014, col=clg)
@@ -245,58 +256,85 @@ plot(Aug_01_2021, col=clg)
 plot(Aug_21_2021, col=clb)
 plot(Aug_21_2021, col=clg)
 
-#i want to see the images from january 2014 and january 2020
+# I want to see the images from january 2014 and january 2020
 #extraxt them from the stack
 
 
-#I want to see if there is a difference in this two period
-difcl<-colorRampPalette(c("yellow","red","black"))(100)#create the color ramp palette
-Vegdif<-Aug_08_2014-Aug_21__2021 #make the difference
-plot(Vegdif, col=difcl)#plotting the images
+# I want to see if there is a difference in this two period
 
+difcl <- colorRampPalette(c("yellow","red","black"))(100) # create the color ramp palette
+Vegdif <- Aug_08_2014 - Aug_21_2021 # make the difference
+
+# looking for vegetation difference 
+plot(Vegdif, col=difcl) # plotting the images 
 plot(Vegdif, col = rev(terrain.colors(10)), main = "layer")
 
 
- plot(Agosto2014_un$map)
- plot(Agosto2014_un$map, col=clb)
- Agosto2014_un <- unsuperClass(august2014, nClasses=2)
- plot(Agosto2014_un$map, col=clb)
- Agosto2014_un <- unsuperClass(august2014, nClasses=4)
- plot(Agosto2014_un$map, col=clb)
- Agosto2014_un <- unsuperClass(august2014, nClasses=5)
- plot(Agosto2014_un$map, col=clb)
- Agosto2014_un <- unsuperClass(august2014, nClasses=8)
- plot(Agosto2014_un$map, col=clb
+#clustering for a better analysis. choose two nclass a
+nsuper_stack_14 <- unsuperClass(temporal_stack$Aug_08_2014,nSamples = 21774, nStarts = 25,nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+nsuper_stack_20 <- unsuperClass(temporal_stack$Aug_01_2020,nSamples = 21774, nStarts = 25,nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+nsuper_stack_21.01 <- unsuperClass(temporal_stack$Aug_01_2021,nSamples = 21773, nStarts = 25,nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+nsuper_stack_21.21 <- unsuperClass(temporal_stack$Aug_21_2021,nSamples = 21774, nStarts = 25,nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
 
-cveg <- crop(a, ext)
-cveg1 <- crop(b, ext)
-cveg2 <- crop(c, ext)
-
-par(mfrow=c(1,3))
-plot(cveg)
-plot(cveg1)
-plot(cveg2)
-plot(Cvegdif)
-difcl <- colorRampPalette(c("darkblue","yellow","red","black"))(100)
+#plot the cluster images
+par(mfrow=c(2,2))
+plot(nsuper_stack_14$map, main= 'Agosto 2014')
+plot(nsuper_stack_20$map, main= 'Agosto 2020')
+plot(nsuper_stack_21.01$map, main= 'Agosto 2021-01')
+plot(nsuper_stack_21.21$map, main= 'Agosto 2021-21')
 
 
-Cvegdif<-cveg-cveg1-cveg2
+freq(nsuper_stack_14$map)
+freq(nsuper_stack_20$map)
+freq(nsuper_stack_21.01$map)
+freq(nsuper_stack_21.21$map)
 
-napa <- unsuperClass(cveg, nClasses=2)
-napa
-# *************** Map ******************
-# $map
-# class      : RasterLayer 
-# dimensions : 772, 840, 648480  (nrow, ncol, ncell)
-# resolution : 0.00297619, 0.00297619  (x, y)
-# extent     : 15.49851, 17.99851, 37.70089, 39.99851  (xmin, xmax, ymin, ymax)
-# crs        : +proj=longlat +datum=WGS84 +no_defs 
-# source     : memory
-# names      : layer 
-# values     : 1, 2  (min, max)
-plot(napa$map)
+# freq(nsuper_stack_14$map)
+#      value count
+# [1,]     1 10645
+# [2,]     2 11129
+# freq(nsuper_stack_20$map)
+#      value count
+# [1,]     1 12515
+# [2,]     2  9259
+# freq(nsuper_stack_21.01$map)
+#      value count
+# [1,]     1 11062
+# [2,]     2 10711
+# [3,]    NA     1
+# freq(nsuper_stack_21.21$map)
+#      value count
+# [1,]     1 10038
+# [2,]     2 11736
 
-ext <- c(15.5, 16.5, 37.8, 38.5) # provincia di Reggio, Asprumunti.
+totale <- 10038 + 11736
+totale_21.01 <- 11062 + 10711
+
+prop_ndvi_2014 <- 10645/totale 
+prop_ndvi_2014.1 <- 11129/totale 
+
+prop_ndvi_2020 <- 12515/totale
+prop_ndvi_2020.1 <- 9259/totale
+
+
+prop_ndvi_2021.01 <- 11062/totale_21.01
+prop_ndvi_2021.01.1 <- 10711/totale_21.01
+
+
+prop_ndvi_2021.21 <- 10038/totale
+prop_ndvi_2021.21.1 <- 11736/totale
+
+prop_ndvi_2014 
+prop_ndvi_2014.1
+
+prop_ndvi_2020 
+prop_ndvi_2020.1
+
+prop_ndvi_2021.01
+prop_ndvi_2021.01.1
+
+prop_ndvi_2021.21
+prop_ndvi_2021.21.1
 
 
 ######################### make the frequencies of the precences of 2014 ############################
@@ -681,7 +719,7 @@ values     : 1, 2  (min, max)
 [1] 0.7728217
 
 
-
+naip_ndvi_ov <- overlay(veg_cropped[[1]], veg_cropped[[7]]], fun = normalized_diff)
 
 
 
