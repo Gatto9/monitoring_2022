@@ -45,7 +45,15 @@ fire_cropped <- crop(fire, ext)
 plot(fire_cropped)
 plot(fire_cropped, col=cl)
 
-
+hist(ndvi,
+     main = "Distribution of NDVI values",
+     xlab = "NDVI",
+     ylab= "Frequency",
+     col = "wheat",
+     xlim = c(-0.5, 1),
+     breaks = 30,
+     xaxt = 'n')
+axis(side=1, at = seq(-0.5,1, 0.05), labels = seq(-0.5,1, 0.05))
 
 
 ########################################
@@ -62,27 +70,34 @@ setwd("/Users/macdisimonegatto/Desktop/lab/project")
 # i can import all the file by hand, so lazy...
 NDVI_2014 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc")
 # this images are important to consider the impact of the covid on the beavhiour of the popualation and ecomafie during the pandemic era
-NDVI_07_21 <- raster("c_gls_NDVI300_2020_07_210000_GLOBE_PROBAV_V1.0.1.nc")
-NDVI_08_01 <- raster("c_gls_NDVI300_2020_08_010000_GLOBE_PROBAV_V1.0.1.nc")
-NVDI_08_11 <- raster("c_gls_NDVI300_2020_08_110000_GLOBE_PROBAV_V1.0.1.nc")
-NVDI_08_11 <- raster("c_gls_NDVI300_202108010000_GLOBE_OLCI_V2.0.1.nc")
+#The NDVI 300m V2 products are generated from Sentinel-3/OLCI BRDF-corrected
+
+# i import the NDVI detected from the OLCI (ocean and land cover index) instead of PROBAV sensor,because it has been adjust
+NDVI_08_01 <- raster("c_gls_NDVI300_2020_08_010000_GLOBE_OLCI_V2.0.1.nc")
+NVDI_08_11 <- raster("c_gls_NDVI300_2020_08_110000_GLOBE_OLCI_V2.0.1.nc")
+NDVI_07_21 <- raster("c_gls_NDVI300_2020_08_210000_GLOBE_OLCI_V2.0.1.nc")
+
+NVDI_08_01 <- raster("c_gls_NDVI300_202108010000_GLOBE_OLCI_V2.0.1.nc")
 NVDI_08_11 <- raster("c_gls_NDVI300_202108110000_GLOBE_OLCI_V2.0.1.nc")
-NVDI_08_11 <- raster("c_gls_NDVI300_202108210000_GLOBE_OLCI_V2.0.1.nc")
+NVDI_08_21 <- raster("c_gls_NDVI300_202108210000_GLOBE_OLCI_V2.0.1.nc")
 
 # and assigning a function to each images
 # or better i can create a list from a common name
-rlist <- list.files(pattern="NDVI300")
-rlist
-# [1] "c_gls_NDVI300_202007210000_GLOBE_PROBAV_V1.0.1.nc" 
-# [2] "c_gls_NDVI300_202008010000_GLOBE_PROBAV_V1.0.1.nc"
-# [3] "c_gls_NDVI300_202008110000_GLOBE_PROBAV_V1.0.1.nc"
-# [5] "c_gls_NDVI300_202108010000_GLOBE_OLCI_V2.0.1.nc"    
-# [6] "c_gls_NDVI300_202108110000_GLOBE_OLCI_V2.0.1.nc"    
-# [7] "c_gls_NDVI300_202108210000_GLOBE_OLCI_V2.0.1.nc"  
+
+ndvi_list <- list.files(pattern="NDVI300")
+ndvi_list # recall the list to have a look with the files
+
+# [1] "c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc"
+# [2] "c_gls_NDVI300_2020_08_010000_GLOBE_OLCI_V2.0.1.nc"  
+# [3] "c_gls_NDVI300_2020_08_110000_GLOBE_OLCI_V2.0.1.nc"  
+# [4] "c_gls_NDVI300_2020_08_210000_GLOBE_OLCI_V2.0.1.nc"  
+# [5] "c_gls_NDVI300_2021_08_010000_GLOBE_OLCI_V2.0.1.nc"  
+# [6] "c_gls_NDVI300_2021_08_110000_GLOBE_OLCI_V2.0.1.nc"  
+# [7] "c_gls_NDVI300_2021_08_210000_GLOBE_OLCI_V2.0.1.nc" 
 
 # applying raster function to every image for better and fast analysis
-list_rast <- lapply(rlist, raster)
-list_rast
+ndvi_rast <- lapply(ndvi_list, raster)
+ndvi_rast
 
 # [[1]]
 # class      : RasterLayer 
@@ -164,8 +179,8 @@ list_rast
 
 
 #  creation of a stack of this different rasterlayer 
-vegetation <- stack(list_rast)
-vegetation
+ndvi_stack <- stack(ndvi_rast)
+ndvi_stack
 
 # class      : RasterStack 
 # dimensions : 47040, 120960, 5689958400, 4  (nrow, ncol, ncell, nlayers)
@@ -182,11 +197,11 @@ vegetation
 #create the extenction of coordiantes first (x,y)
 # I decide to crop first because the image have a huge amount of pixels
 
-names(vegetation)<- c("August_2014",  "July_21", "August_01",  "August_11", "August_fire_01", "August_fire_11", "August_fire_21")
+names(ndvi_stack)<- c("August_2014",  "July_21", "August_01",  "August_11", "August_fire_01", "August_fire_11", "August_fire_21")
 
 extReggio <- c(15.6296, 16.1973, 37.9463, 38.2839) # provincia di Reggio, Asprumunti.
-veg_cropped <- crop(vegetation, extReggio)
-veg_cropped
+stack_crop <- crop(ndvi_stack, extReggio)
+stack_crop
 
 # class      : RasterBrick 
 # dimensions : 186, 270, 50220, 7  (nrow, ncol, ncell, nlayers)
@@ -199,27 +214,27 @@ veg_cropped
 # max values :   0.9360001, 0.9360001, 0.9360001, 0.9360001,      0.9360000,      0.9360000,      0.9360000
 
 # plot the stack cropped to see all the images
-plot(veg_cropped)
+plot(stack_crop)
 
 
 # i'd obtain a plotting point to see the loss of vegetation in seven years
-plot(veg_cropped$August_2014, veg_cropped$August_fire_21)
+plot(stack_crop$August_2014, stack_crop$August_fire_21)
 abline(0,1, col="red")
 
 #
-plot(veg_cropped$August_fire_01, veg_cropped$August_fire_21)
+plot(stack_crop$August_fire_01, stack_crop$August_fire_21)
 abline(0,1, col="red")
 
 # assign a name for a multitemporal analysis and better managing of the files
-Aug_08_2014 <- veg_cropped[[1]]
-Aug_01_2020 <- veg_cropped[[3]]
-Aug_01_2021 <- veg_cropped[[5]]
-Aug_21_2021 <- veg_cropped[[7]]
+Aug_08_2014 <- stack_crop[[1]]
+Aug_01_2020 <- stack_crop[[3]]
+Aug_01_2021 <- stack_crop[[5]]
+Aug_21_2021 <- stack_crop[[7]]
 # or
-Aug_08_2014 <- veg_cropped$August_2014
-Aug_01_2020 <- veg_cropped$August_01
-Aug_21_2021 <- veg_cropped$August_fire_21
-Aug_01_2021 <- veg_cropped$August_fire_01
+Aug_08_2014 <- stack_crop$August_2014
+Aug_01_2020 <- stack_crop$August_01
+Aug_01_2021 <- stack_crop$August_fire_01
+Aug_21_2021 <- stack_crop$August_fire_21
 
 
 temporal_stack <-stack(Aug_08_2014, Aug_01_2020, Aug_21_2021, Aug_01_2021)
@@ -243,7 +258,7 @@ plot(Aug_21_2021)
 #createing a colors palettes
 clb<- colorRampPalette(c("darkblue","green","lightblue"))(100)
 clg<- colorRampPalette(c("darkgreen","green","lightgreen"))(100)
-rgBk<- colorRampPalette(c("red","green","black"))(100)
+clBk<- colorRampPalette(c("red","green","black"))(100)
 
 #plot the images and assign the color
 
@@ -336,7 +351,11 @@ prop_ndvi_2021.01.1
 prop_ndvi_2021.21
 prop_ndvi_2021.21.1
 
-
+# Cells with NDVI values greater than 0.4 are definitely vegetation. The following operation masks all cells that are perhaps not vegetation.
+veg <- reclassify(ndvi, cbind(-Inf, 0.4, NA))
+plot(veg, main='Vegetation')
+land <- reclassify(ndvi, c(-Inf, 0.25, NA,  0.25, 0.3, 1,  0.3, Inf, NA))
+plot(land, main = 'What is it?'
 ######################### make the frequencies of the precences of 2014 ############################
 
 v2014 <- raster("c_gls_NDVI300_201408010000_GLOBE_PROBAV_V1.0.1.nc")
