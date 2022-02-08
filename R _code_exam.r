@@ -1,12 +1,18 @@
 # “Combustion is a complex process in which fuel is heated, ignites, and oxidizes rapidly, giving off heat in the process. 
 # Fire is a special case of combustion—self-perpetuating combustion characterized by the emission of heat and accompanied by flame and/or smoke. 
 # With fire, the supply of combustible fuel is controlled by heat given off during combustion” 
-#
+# La superficie boscata bruciata è stata di 2.281 ettari con un aumento, rispetto al 2013, del numero degli incendi boschivi pari al 79% 
 # I would like to see the vegetation changes of the Calabrian aspromonte after the summer, caused by self-igniting forest fires
 # I'd like to detect the emission of CO2 in the summer period for these fires 
 # I want to discuss about the causes and how to prevent or manage the fires in time
 # I can detect the temperature during that period
 # thank to special data i can see the smoke plumes of these fires
+# Sono nove i progetti del Parco Nazionale dell’Aspromonte finanziati dal Ministero della Transizione Ecologica attraverso il bando 2021 “Parchi per il clima”, per un importo complessivo di 4,2 milioni di euro. 
+#Gli interventi prevedono l’efficientamento energetico di alcune strutture nei Comuni del territorio del Parco, con priorità ai punti informativi e ad edifici destinati alle attività culturali e all’accoglienza.
+
+
+
+
 
 # install all the package you need 
 
@@ -17,6 +23,7 @@
 # install.packages("viridis")
 # install.packages("ncdf4")
 # install.packages("patchwork")
+# install.packages("sf") # useful to open and manage shapefile
 
 library(patchwork)
 library(raster)
@@ -54,6 +61,167 @@ hist(ndvi,
      breaks = 30,
      xaxt = 'n')
 axis(side=1, at = seq(-0.5,1, 0.05), labels = seq(-0.5,1, 0.05))
+
+
+# i open the file with ncdf4 packages to know more information like latitude and longitude
+
+nc_file <- nc_open("c_gls_BA300_202107310000_GLOBE_S3_V1.2.1.nc")
+nc_file
+lon <- ncvar_get(nc_file, varid = "lon")
+lat <- ncvar_get(nc_file, varid = "lat")
+ 
+summary(lon)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-1.80e+02 -9.00e+01 -1.49e-03 -1.49e-03  9.00e+01  1.80e+02 
+summary(lat)
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    -60     -25      10      10      45      80 
+
+MLD <- nc_open(MLD)
+   print(MLD)
+
+
+setwd("/Users/macdisimonegatto/Desktop/lab/project/calabria/")
+> aoi_boundary <-st_read("EMSR534_AOI01_GRA_PRODUCT_areaOfInterestA_r1_v1.shp")
+Reading layer `EMSR534_AOI01_GRA_PRODUCT_areaOfInterestA_r1_v1' from data source `/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_areaOfInterestA_r1_v1.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 1 feature and 5 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 15.6589 ymin: 37.91141 xmax: 16.18244 ymax: 38.25393
+Geodetic CRS:  WGS 84
+> st_geometry_type(aoi_boundary)
+[1] POLYGON
+18 Levels: GEOMETRY POINT LINESTRING POLYGON ... TRIANGLE
+> st_crs(aoi_boundary)
+Coordinate Reference System:
+  User input: WGS 84 
+  wkt:
+GEOGCRS["WGS 84",
+    DATUM["World Geodetic System 1984",
+        ELLIPSOID["WGS 84",6378137,298.257223563,
+            LENGTHUNIT["metre",1]]],
+    PRIMEM["Greenwich",0,
+        ANGLEUNIT["degree",0.0174532925199433]],
+    CS[ellipsoidal,2],
+        AXIS["latitude",north,
+            ORDER[1],
+            ANGLEUNIT["degree",0.0174532925199433]],
+        AXIS["longitude",east,
+            ORDER[2],
+            ANGLEUNIT["degree",0.0174532925199433]],
+    ID["EPSG",4326]]
+> 
+> st_bbox(aoi_boundary)
+    xmin     ymin     xmax     ymax 
+15.65890 37.91141 16.18244 38.25393 
+> aoi_boundary
+Simple feature collection with 1 feature and 5 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 15.6589 ymin: 37.91141 xmax: 16.18244 ymax: 38.25393
+Geodetic CRS:  WGS 84
+  emsr_id glide_no area_id locality map_type
+1 EMSR534       NA      01 San Luca  Grading
+                        geometry
+1 POLYGON ((15.90929 37.92512...
+> ggplot() + 
++   geom_sf(data = aoi_boundary, size = 3, color = "black", fill = "cyan1") + 
++   ggtitle("AOI Boundary Plot") + 
++   coord_sf()
+
+
+            
+            
+            
+            
+# i download from copernicus the shapefile of the area of interest for my and i rename in "calabria" the folder to simplify the work directory
+# this is the shapefile of building area near the wildfire 
+aoi_boundary1 <-st_read("EMSR534_AOI01_GRA_PRODUCT_builtUpA_r1_v1.shp")
+
+
+st_geometry_type(aoi_boundary1)
+
+aoi_boundary1
+[1] POLYGON
+18 Levels: GEOMETRY POINT LINESTRING POLYGON ... TRIANGLE
+> st_bbox(aoi_boundary)
+    xmin     ymin     xmax     ymax 
+15.65890 37.91141 16.18244 38.25393 
+> st_geometry_type(aoi_boundary1)
+ [1] POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON
+ [9] POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON
+[17] POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON
+[25] POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON POLYGON
+[33] POLYGON POLYGON
+18 Levels: GEOMETRY POINT LINESTRING POLYGON ... TRIANGLE
+> st_bbox(aoi_boundary1)
+    xmin     ymin     xmax     ymax 
+15.68655 38.00402 15.90206 38.21481 
+> aoi_boundary1
+Simple feature collection with 34 features and 10 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 15.68655 ymin: 38.00402 xmax: 15.90206 ymax: 38.21481
+Geodetic CRS:  WGS 84
+First 10 features:
+                       obj_type    name
+1      11-Residential Buildings Unknown
+2  12-Non-residential Buildings Unknown
+3      11-Residential Buildings Unknown
+4  12-Non-residential Buildings Unknown
+5      11-Residential Buildings Unknown
+6      11-Residential Buildings Unknown
+7      11-Residential Buildings Unknown
+8      11-Residential Buildings Unknown
+9      11-Residential Buildings Unknown
+10 12-Non-residential Buildings Unknown
+                                  info       damage_gra     det_method
+1                   997-Not Applicable          Damaged Not Applicable
+2                        1280-Cemetery          Damaged Not Applicable
+3                   997-Not Applicable Possibly damaged Not Applicable
+4  127-Other non-residential buildings Possibly damaged Not Applicable
+5                   997-Not Applicable Possibly damaged Not Applicable
+6                   997-Not Applicable Possibly damaged Not Applicable
+7                   997-Not Applicable Possibly damaged Not Applicable
+8                   997-Not Applicable Possibly damaged Not Applicable
+9                   997-Not Applicable Possibly damaged Not Applicable
+10 127-Other non-residential buildings Possibly damaged Not Applicable
+         notation or_src_id dmg_src_id       cd_value           real
+1  Building block       994          8 Not Applicable    Real extent
+2  Building block       994          8 Not Applicable    Real extent
+3  Not Applicable        10          8 Not Applicable Not Applicable
+4  Not Applicable        10          8 Not Applicable Not Applicable
+5  Not Applicable        10          8 Not Applicable Not Applicable
+6  Not Applicable        10          8 Not Applicable Not Applicable
+7  Not Applicable        10          8 Not Applicable Not Applicable
+8  Not Applicable        10          8 Not Applicable Not Applicable
+9  Not Applicable        10          8 Not Applicable Not Applicable
+10 Not Applicable        10          8 Not Applicable Not Applicable
+                         geometry
+1  POLYGON ((15.81391 38.08579...
+2  POLYGON ((15.69648 38.21189...
+3  POLYGON ((15.78157 38.16352...
+4  POLYGON ((15.78404 38.16303...
+5  POLYGON ((15.69884 38.21379...
+6  POLYGON ((15.69965 38.21336...
+7  POLYGON ((15.69345 38.21365...
+8  POLYGON ((15.69285 38.21283...
+9  POLYGON ((15.69361 38.18023...
+10 POLYGON ((15.80154 38.10552...
+> dev.off()
+
+aoi_boundary1 <-st_read("EMSR534_AOI01_GRA_PRODUCT_builtUpA_r1_v1.shp") # this is the shape file from calabria folder situated in the lab folder with built up of the AOI
+aoi_boundary2 <-st_read("EMSR534_AOI01_GRA_PRODUCT_imageFootprintA_r1_v1.shp") # footprint of the wildifire
+aoi_boundary3 <-st_read("EMSR534_AOI01_GRA_PRODUCT_naturalLandUseA_r1_v1.shp") # shapefile of natural land of the AOI
+aoi_boundary4 <-st_read("EMSR534_AOI01_GRA_PRODUCT_observedEventA_r1_v1.shp") # shapefile of different wildfire event in the AOI
+
+
+
+
+
+
+
 
 
 ########################################
