@@ -1,0 +1,506 @@
+
+
+This is my job. thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
+The flames have restarted in the Aspromonte Mountain around the San Luca Valley, where there are the Unesco heritage beech trees called Faggete Vetuste. 
+Ground teams from other italian regions have been deployed to the affected places, as well several Canadairs and helicopters. 
+Thanks to the job of copernicus project i was able to work for all of us.
+The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca 
+i hope you enjoing it ;)  
+
+# install.packages("raster")
+# install.packages("rgdal")
+# install.packages("RStoolbox")
+# install.packages("ggplot2")
+# install.packages("viridis")
+# install.packages("ncdf4")
+# install.packages("patchwork")
+# install.packages("sf") # useful to open and manage shapefile
+# install.packages("RColorBrewer").  col=brewer.pal(5, 'RdYlGn'))
+
+
+library(raster)
+library(rgdal)
+library(RStoolbox)
+library(ggplot2)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(ncdf4)
+library(sf)
+
+setwd("/Users/macdisimonegatto/Desktop/lab/project") #setting the working directory
+
+# import all the files of the burned area
+# i create a list of files
+
+burned_list <- list.files(pattern="BA300")
+burned_list
+
+# [1] "c_gls_BA300-FDOB-DEKAD_202108100000_CUSTOM_S3_V1.2.1.tiff" 
+# [2] "c_gls_BA300-FDOB-DEKAD_202108200000_CUSTOM_S3_V1.2.1.tiff" 
+# [3] "c_gls_BA300-FDOB-DEKAD_202108310000_CUSTOM_S3_V1.2.1.tiff" 
+# [4] "c_gls_BA300-FDOB-SEASON_202108100000_CUSTOM_S3_V1.2.1.tiff"
+# [5] "c_gls_BA300-FDOB-SEASON_202108200000_CUSTOM_S3_V1.2.1.tiff"
+# [6] "c_gls_BA300-FDOB-SEASON_202108310000_CUSTOM_S3_V1.2.1.tiff"
+
+
+# i apply the raster fuction with the lapply function
+burned_lapply <- lapply(burned_list, raster)
+burned_lapply
+
+# [[1]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-DEKAD_202108100000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.DEKAD_202108100000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+
+
+# [[2]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-DEKAD_202108200000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.DEKAD_202108200000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+
+
+# [[3]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-DEKAD_202108310000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.DEKAD_202108310000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+
+
+# [[4]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-SEASON_202108100000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.SEASON_202108100000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+
+
+# [[5]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-SEASON_202108200000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.SEASON_202108200000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+
+
+# [[6]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_BA300-FDOB-SEASON_202108310000_CUSTOM_S3_V1.2.1.tiff 
+# names      : c_gls_BA300.FDOB.SEASON_202108310000_CUSTOM_S3_V1.2.1 
+# values     : 0, 65535  (min, max)
+# this values are the 16 bit of the images.
+# i stacked all the images for better analysis
+
+
+burned_stack <- stack(burned_lapply)
+burned_stack
+
+# class      : RasterStack 
+# dimensions : 47040, 120960, 5689958400, 6  (nrow, ncol, ncell, nlayers)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# names      : c_gls_BA3//_S3_V1.2.1, c_gls_BA3//_S3_V1.2.1, c_gls_BA3//_S3_V1.2.1, c_gls_BA3//_S3_V1.2.1, c_gls_BA3//_S3_V1.2.1, c_gls_BA3//_S3_V1.2.1 
+# min values :                     0,                     0,                     0,                     0,                     0,                     0 
+# max values :                 65535,                 65535,                 65535,                 65535,                 65535,                 65535 
+
+
+# i create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
+extCal <- c(15.5997, 16.40327, 37.84673, 38.4003) # i use this extention to see the province of Reggio Calabria one time
+extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection that i use for the rest of my job
+
+
+# crop the stack due to the huge amount of the pixels
+burned_crop <- crop(burned_stack, extReggio)
+burned_crop # recall the object to see info and if it's all right
+
+# crop the stack due to the huge amount of the pixels 
+burned_crop <- crop(burned_stack, extR)
+burned_crop # recall the object to see info and if it's all right
+
+
+# i create a color palette to see better the fire area
+clBk<- colorRampPalette(c("red","black"))(10)
+
+plot(burned_crop, axes = (x=x, y=y) ,box = FALSE, col = clBk) 
+# in these images we can see that different fires are active at the same time but in different place. the fires start from deep of the forest, where the fire track can't go.
+# so for th reason the firefigher had had difficult to extinguish the fire.
+
+
+################################################ NDVI EVALUATION #########################################################
+
+
+# The NDVI 300m V2 products are generated from Sentinel-3/OLCI V2
+# The imagery from copernicus are important to evaluate the loss of vegetation
+# i can import all the file by hand but it is so lazy...
+NDVI_2014 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc")
+# these images are important to evaluate the loss of vegetation 
+
+
+#  i can create a list from a common name through the list file function
+ndvi_list <- list.files(pattern="NDVI300")
+ndvi_list # recall the list to have a look with the files
+
+# [1] "c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc"
+# [2] "c_gls_NDVI300_2020_08_210000_GLOBE_OLCI_V2.0.1.nc"  # this images are important to consider the difference from the previous year 
+# [3] "c_gls_NDVI300_2021_08_010000_GLOBE_OLCI_V2.0.1.nc"  
+# [4] "c_gls_NDVI300_2021_08_110000_GLOBE_OLCI_V2.0.1.nc"  
+# [5] "c_gls_NDVI300_2021_08_210000_GLOBE_OLCI_V2.0.1.nc" 
+
+
+
+# applying raster function to every image for better and fast analysis
+ndvi_rast <- lapply(ndvi_list, raster)
+ndvi_rast
+
+# [[1]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333M 
+# zvar       : NDVI 
+
+# [[2]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_2020_08_210000_GLOBE_OLCI_V2.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333m 
+# z-value    : 2020-08-21 
+# zvar       : NDVI 
+
+# [[3]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_2021_08_010000_GLOBE_OLCI_V2.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333m 
+# z-value    : 2021-08-01 
+# zvar       : NDVI 
+
+# [[4]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_2021_08_110000_GLOBE_OLCI_V2.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333m 
+# z-value    : 2021-08-11 
+# zvar       : NDVI 
+
+# [[5]]
+# class      : RasterLayer 
+# dimensions : 47040, 120960, 5689958400  (nrow, ncol, ncell)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : c_gls_NDVI300_2021_08_210000_GLOBE_OLCI_V2.0.1.nc 
+# names      : Normalized.Difference.Vegetation.Index.333m 
+# z-value    : 2021-08-21 
+# zvar       : NDVI 
+
+
+#  creation of a stack of these rasterlayer 
+ndvi_stack <- stack(ndvi_rast)
+ndvi_stack
+
+# class      : RasterStack 
+# dimensions : 47040, 120960, 5689958400, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : -180.0015, 179.9985, -59.99851, 80.00149  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# names      : Normalized.Difference.Vegetation.Index.333M,
+# Normalized.Difference.Vegetation.Index.333m.1,
+# Normalized.Difference.Vegetation.Index.333m.2, 
+# Normalized.Difference.Vegetation.Index.333m.3,
+# Normalized.Difference.Vegetation.Index.333m.4 
+
+# I decide to rename the file
+names(ndvi_stack)<- c("Aug_01_2014", "Aug_21_2020", "Aug_01_2021", "Aug_11_2021", "Aug_21_2021")
+
+# crop the area of interest, also due to the huge amount of pixels, using the previous extention created
+
+ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria one time
+ndvi_crop_RC <- crop(ndvi_stack, extReggio) # this is the extection that i use for the rest of my job
+
+ndvi_crop_RC # call the object to see if it's all right
+
+# class      : RasterBrick 
+# dimensions : 115, 176, v, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 0.00297619, 0.00297619  (x, y)
+# extent     : 15.65923, 16.18304, 37.9122, 38.25446  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : r_tmp_2022-02-12_224230_75857_97463.grd 
+# names      : Aug_01_2014, Aug_21_2020, Aug_01_2021, Aug_11_2021, Aug_21_2021 
+# min values :  0.02400001, -0.08000000, -0.08000000, -0.06800000, -0.08000000 
+# max values :   0.9360001,   0.9360000,   0.9360000,   0.9360000,   0.9360000 
+
+# i will create two palette of color 
+
+plot(ndvi_crop_Cal) # to see the original file format
+plot(ndvi_crop_RC) # to start the job
+
+# now i want to show ndvi time series during the wildfire event
+# i use this image to do the unsupervised classification to evaluate the difference with the postfire event
+NDVI_21_2020 <-  ndvi_crop_RC[[2]]
+NDVI_01_2021 <-  ndvi_crop_RC[[3]]
+NDVI_21_2021 <-  ndvi_crop_RC[[5]]     
+
+temporal_stack<- stack(NDVI_01_2021,NDVI_11_2021,NDVI_21_2021)
+
+The non-vegetation pixels (<0.3) can be masked out. T
+he function calc is used to make arithmetic calculations on rasters (among others applications). 
+In this case, a function is created to select all values smaller than 0.3, and make them equal to no data (NA). T
+he resulting image will have values greater than 0.4. This process is called “Thresholding”.
+NDVI values are standardized and range between -1 to +1. Pixels having NDVI values greater than 0.4 are very probably vegetation.
+
+#  Mask out the values smaller than 0.4.
+# Cells with NDVI values greater than 0.4 are definitely vegetation. The following operation makes all cells that are perhaps not vegetation.
+veg_pre <- calc(rcrop$August_fire_01, function(x){x[x < 0.4] <- NA; return(x)})
+veg_post <- calc(rcrop$August_fire_21, function(x){x[x < 0.4] <- NA; return(x)})
+
+par(mfrow=c(2,2))
+breakpoints <- seq(-1, 1, by=0.2)
+ plot(rcrop$August_fire_01, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
+ plot(rcrop$August_fire_21, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')
+ plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
+ plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')     
+
+
+# i focus myself to the last day of the wildfire event, 21th of August
+
+cl1 <- colorRampPalette(c("red", "yellow", "lightgreen"))(20) # i use the previous palette used for the tresholding
+
+plot(NDVI_21_2020, col = cl1)
+plot(NDVI_21_2021, col = cl1)
+
+
+###################################### FOR HISTOGRAM #################################################
+# Quantitative analysis.....
+# Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
+# For instance, there is a break between 0 and 1 in the histogram results above. 
+# let's see the distribution of vegetation using hist fuction that show us an histogram where the pixels are distruibuted under the bar
+
+par(mfrow=c(2,1))
+hist(NDVI_21_2020,
+      xlim = c(-0.080, 0.936),
+      ylim = c(0, 3000),
+      breaks = 20,
+      main = "Histogram of NDVI distribution in 2020",
+      col = "springgreen",
+      xlab = "NDVI value")
+
+hist(NDVI_21_2021,
+      xlim = c(-0.080, 0.936),
+      ylim = c(0, 3000),
+      breaks = 20,
+      main = "Histogram of NDVI distibution in 2021",
+      col = "springgreen",
+      xlab = "NDVI value")
+ 
+# now i will see where are di
+# I make a classification to distinguish different element of the land. The year i choose is 2021.
+# For me forest have a value equal or more of 0.6 
+forest <- NDVI_21_2021 >=0.4
+forest
+plot(forest)
+
+
+# is chose a value for cropland between 0.3 and 0.4
+cropland <-   NDVI_21_2021  >= 0.3 & NDVI_21_2021<0.5
+plot(cropland, col=c("white", "yellow3"))    
+cropland_n =cropland*2 # change the value to allow the plot otherwise all the value are the same and it is imposible to plot the layer
+cropland_n
+
+# for followland is under 0.30
+fallowland <- NDVI_21_2021 > 0.1 & NDVI_21_2021 <0.3
+fallowland
+plot(fallowland, col=c("white", "azure3"))
+fallowland_n <- fallowland*3    
+
+water <- NDVI_01_2021 <=0
+water
+plot(water, col=c("white", "blue3"))
+water_n <- water*4
+
+
+par(mfrow=c(1,1))
+#plot the element altogheter
+NDVI_class <- forest + cropland_n + fallowland_n + water_n
+plot(NDVI_class)
+
+# this bar plot better explain the distribution of the differente class
+barplot(NDVI_class, main = "Distribution of Classified NDVI Values", names.arg = c("water","forest", "cropland", "followland"))
+
+# Showing the different between the day of burn and the previous year
+difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color palette useful for this plot
+vegdif <- NDVI_21_2021 - NDVI_21_2020 # make the difference
+plot(vegdif, col=difcl)
+
+# scatter plotting of this two layer
+plot(NDVI_21_2020, NDVI_21_2021)
+abline(0,1, col="red")
+             
+# Now i calculate the loss using unsupervised classification
+# This type of classification can be useful when not a lot is known about an area.
+# clustering for quantitative analisys. choose two nclass that represent the presence and the absence of vegetation
+nsuper_stack_20 <- unsuperClass(NDVI_21_2020,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+nsuper_stack_21_21 <- unsuperClass(NDVI_21_2021,nSamples = 20240, nIter = 100,nIter = 100, norm = TRUE, clusterMap = TRUE, nClasses=2)
+
+# plot the cluster images
+par(mfrow=c(2,1))
+plot(nsuper_stack_20$map, main= 'Agosto 2020-21')
+plot(nsuper_stack_21_21$map, main= 'Agosto 2021-21')
+
+freq(nsuper_stack_20$map)
+# Generate and format frequency tables from a variable or a table, with percentages and formatting options
+freq(nsuper_stack_21_21$map)
+freq(nsuper_stack_20$map)
+
+#    value count
+# [1,]     1  9837
+# [2,]     2 10394
+# [3,]    NA     9
+freq(nsuper_stack_21_21$map)
+
+#     value count
+# [1,]     1 11704
+# [2,]     2  8527
+# [3,]    NA     9
+
+totale <- 9837 + 10394
+totale # [1] 22098
+
+
+prop_abse_2020 <- 9837/totale
+prop_pres_2020 <- 10394/totale
+
+prop_abse_2021 <- 11704/totale
+prop_pres_2021 <- 8527/totale
+
+
+prop_abse_2020 
+# [1] 0.4451534 # 0,44x100 44%
+prop_pres_2020
+# [1] 0.4703593 # 0,47x100 47%
+prop_abse_2021
+# [1] 0.5296407 # 0,52x100 52%
+prop_pres_2021
+# [1] 0.385872  # 0.38x100 38%
+# the loss of vegetation is [(52/44)*100 - 100]% = 20%
+     
+cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
+prop2020 <- c(prop_pres_2020, prop_abse_2020) # here we had create a proportion 
+prop2020
+
+cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
+prop2021_21 <- c(prop_pres_2021, prop_abse_2021) # here we had create a proportion 
+prop2021_21
+
+proportion2020 <- data.frame(cover, prop2020)
+proportion2020
+#         cover  prop2020
+# 1    presence 0.4703593
+# 2     absence 0.4451534
+
+proportion2021_21 <- data.frame(cover, prop2021_21)
+proportion2021_21
+#         cover  prop2021.21
+# 1    presence 0.3858720
+# 2     absence 0.5296407
+
+#use ggplot and patchwork to plot 
+prop1 <- ggplot(proportion2020, aes(x=cover, y=prop2020, color=cover)) + geom_bar(stat="identity", fill="white")
+prop2 <- ggplot(proportion2021_21, aes(x=cover, y=prop2021_21, color=cover)) + geom_bar(stat="identity", fill="white")
+
+#patchwork
+prop1 / prop2
+
+################################## Qualitative analysis ################################
+# Ok, now i decide to show better the area of interest using bowndary shape find out in copernicus site about the day of burn
+# I import from a folder renamed calabria situated in the lab folder 
+aoi_boundary <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_areaOfInterestA_r1_v1.shp") # this is the shape of the area of interest
+aoi_boundary1 <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_observedEventA_r1_v1.shp") # shapefile of different wildfire event in the AOI     
+aoi_boundary2 <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_builtUpA_r1_v1.shp") # this is the shape file from calabria folder situated in the lab folder with built up of the AOI
+
+# i use these function to see the information of these shape files
+st_geometry_type(aoi_boundary)
+st_crs(aoi_boundary)
+st_bbox(aoi_boundary)
+
+# I created a ggplot and I plotted it with patchwork package without the shape file
+p1 <- ggplot() + geom_raster(ndvi_crop_RC, mapping = aes(x=x, y=y, fill= Aug_21_2021)) + scale_fill_viridis(option="magma")+ ggtitle("August_fire_11") + ggtitle("AOI Boundary Plot") + coord_sf()  
+             
+# this ggplot is with shapefile of the area of interest
+p2 <- ggplot() + geom_raster(ndvi_crop_RC, 
+                 mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
+                 scale_fill_viridis(option="magma")+ ggtitle("Aug_21_2021") +  
+                 geom_sf(data = aoi_boundary,  size = 0.30, color = "white", fill=NA) + 
+                 ggtitle("AOI Boundary Plot") + coord_sf()         
+             
+# and this with the shape file of the observed event
+p3 <- ggplot() + geom_raster(ndvi_crop_RC, 
+                 mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
+                 scale_fill_viridis(option="magma")+ ggtitle("Aug_21_2021") +  
+                 geom_sf(data = aoi_boundary,  size = 0.30, color = "white", fill=NA) + 
+                 geom_sf(data = aoi_boundary1,  size = 0.30, color = "red", fill="red") +
+                 ggtitle("AOI Boundary Plot") + coord_sf()    
+# aoi_boundary2 add the building and we can see that most of all are in the fire area. Dramatical
+ p4 <- ggplot() + geom_raster(ndvi_crop_RC, 
+                 mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
+                 scale_fill_viridis(option="magma") + ggtitle("Aug_21_2021") +  
+                 geom_sf(data = aoi_boundary,  size = 0.30, color = "white", fill=NA) + 
+                 geom_sf(data = aoi_boundary1,  size = 0.30, color = "red", fill="red") +
+                 geom_sf(data = aoi_boundary2,  size = 0.50, color = "green", fill=NA) +
+                 ggtitle("AOI Boundary Plot") + coord_sf()  
+# this shapes file point out the real extention of the disaster caused by fire thaks to the job of 
+thank for the attention                     
+
+############################################ to put in the ppt########################################
+
+NDVI 300m V2 shows good consistency with NDVI 300m V1, although a small negative
+systematic bias was found. Where PROBA-V NDVI300 V1 tends to saturate at the maximum
+NDVI for forest biomes, this is not the case for S3 NDVI300 V2. Spatial distribution of the
+bias is strongly linked to vegetation densities. Users should be aware of these differences
+when using the PROBA-V NDVI300 V1 archive as a reference for the more recent S3
+NDVI300 V2 products.
+
+
+
+
+
+
+
+
