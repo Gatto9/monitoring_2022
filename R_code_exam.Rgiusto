@@ -301,7 +301,7 @@ plot(NDVI_21_2020, col = my_col)
 plot(NDVI_21_2021, col = my_col)
 # The situation is dramatically changed after the wildifire...
 
-########################################################THRESHOLDING###########################################################
+######################################################## THRESHOLDING ###########################################################
 
 # The non-vegetation pixels (<0.4) can be masked out. 
 # The function 'calc' is used to make arithmetic calculations on rasters (among others applications). 
@@ -313,14 +313,16 @@ veg_pre <- calc(NDVI_01_2021, function(x){x[x < 0.4] <- NA; return(x)})
 veg_post <- calc(NDVI_21_2021, function(x){x[x < 0.4] <- NA; return(x)})
 
 par(mfrow=c(2,2))
-
 breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axis)
  plot(NDVI_01_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
- plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')
+ plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Post-Fire')
+
+# Plot both NDVI outputs. In the second plot all colored pixels are very probably vegetation.
+
  plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
  plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')     
 
-#######################################################HISTOGRAM ############################################################
+####################################################### HISTOGRAM ############################################################
 # let's do a quantitative analysis.....
 # Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
 # For instance, there is a break between 0 and 1 in the histogram results above. 
