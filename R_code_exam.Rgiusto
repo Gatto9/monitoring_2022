@@ -1,11 +1,11 @@
 
 
 This is my job. thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
-The flames have restarted in the Aspromonte Mountain around the San Luca Valley, where there are the Unesco heritage beech trees called Faggete Vetuste. 
+The flames have restarted in the Aspromonte Mountain around the San Luca Valley, a little land of 3hundred, where there are the Unesco heritage beech trees called Faggete Vetuste. 
 Ground teams from other italian regions have been deployed to the affected places, as well several Canadairs and helicopters. 
 Thanks to the job of copernicus project i was able to work for all of us.
-The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca 
-i hope you enjoing it ;)  
+The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca.
+
 
 # install.packages("raster")
 # install.packages("rgdal")
@@ -16,6 +16,11 @@ i hope you enjoing it ;)
 # install.packages("patchwork")
 # install.packages("sf") # useful to open and manage shapefile
 # install.packages("RColorBrewer").  col=brewer.pal(5, 'RdYlGn'))
+# install.packages('mapview')
+# install.packages("magrittr") # The magrittr package offers a set of operators which make your code more readable by:
+                               ## structuring sequences of data operations left-to-right
+                               The operations are performed to arrive at the desired data set, 
+                               and they are written in a natural order: the same as the order of execution.
 
 
 library(raster)
@@ -27,6 +32,8 @@ library(patchwork)
 library(RColorBrewer)
 library(ncdf4)
 library(sf)
+library(mapview) # I get this from the code of fabio castelli 
+library(magrittr)
 
 setwd("/Users/macdisimonegatto/Desktop/lab/project") #setting the working directory
 
@@ -39,12 +46,12 @@ burned_list
 # [1] "c_gls_BA300-FDOB-DEKAD_202108100000_CUSTOM_S3_V1.2.1.tiff" 
 # [2] "c_gls_BA300-FDOB-DEKAD_202108200000_CUSTOM_S3_V1.2.1.tiff" 
 # [3] "c_gls_BA300-FDOB-DEKAD_202108310000_CUSTOM_S3_V1.2.1.tiff" 
-# [4] "c_gls_BA300-FDOB-SEASON_202108100000_CUSTOM_S3_V1.2.1.tiff"
+# [4] "c_gls_BA300-FDOB-SEASON_202108100000_CUSTOM_S3_V1.2.1.tiff" # This unsigned integer (16 bits) provides the First Day of Burn (FDOB) over one or (typical) more dekads within the season, hence a cumulated FDOB value.
 # [5] "c_gls_BA300-FDOB-SEASON_202108200000_CUSTOM_S3_V1.2.1.tiff"
 # [6] "c_gls_BA300-FDOB-SEASON_202108310000_CUSTOM_S3_V1.2.1.tiff"
 
 
-# i apply the raster fuction with the lapply function
+# I will create a list of raster images using the the lapply function
 burned_lapply <- lapply(burned_list, raster)
 burned_lapply
 
@@ -135,20 +142,19 @@ extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection th
 
 
 # crop the stack due to the huge amount of the pixels
-burned_crop <- crop(burned_stack, extReggio)
+burned_crop <- crop(burned_stack, extCal)
 burned_crop # recall the object to see info and if it's all right
 
 # crop the stack due to the huge amount of the pixels 
 burned_crop <- crop(burned_stack, extR)
 burned_crop # recall the object to see info and if it's all right
 
-
 # i create a color palette to see better the fire area
 clBk<- colorRampPalette(c("red","black"))(10)
 
-plot(burned_crop, axes = (x=x, y=y) ,box = FALSE, col = clBk) 
+plot(burned_crop, col = clBk, leggend = FALSE) 
 # in these images we can see that different fires are active at the same time but in different place. the fires start from deep of the forest, where the fire track can't go.
-# so for th reason the firefigher had had difficult to extinguish the fire.
+# so for this reason the firefigher had had difficult to extinguish the fire.
 
 
 ################################################ NDVI EVALUATION #########################################################
@@ -170,7 +176,6 @@ ndvi_list # recall the list to have a look with the files
 # [3] "c_gls_NDVI300_2021_08_010000_GLOBE_OLCI_V2.0.1.nc"  
 # [4] "c_gls_NDVI300_2021_08_110000_GLOBE_OLCI_V2.0.1.nc"  
 # [5] "c_gls_NDVI300_2021_08_210000_GLOBE_OLCI_V2.0.1.nc" 
-
 
 
 # applying raster function to every image for better and fast analysis
@@ -232,7 +237,7 @@ ndvi_rast
 # zvar       : NDVI 
 
 
-#  creation of a stack of these rasterlayer 
+# creation of a stack of these rasterlayer 
 ndvi_stack <- stack(ndvi_rast)
 ndvi_stack
 
@@ -250,7 +255,7 @@ ndvi_stack
 # I decide to rename the file
 names(ndvi_stack)<- c("Aug_01_2014", "Aug_21_2020", "Aug_01_2021", "Aug_11_2021", "Aug_21_2021")
 
-# crop the area of interest, also due to the huge amount of pixels, using the previous extention created
+# Crop the area of interest, also due to the huge amount of pixels, using the previous extention created.
 
 ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria one time
 ndvi_crop_RC <- crop(ndvi_stack, extReggio) # this is the extection that i use for the rest of my job
@@ -258,7 +263,7 @@ ndvi_crop_RC <- crop(ndvi_stack, extReggio) # this is the extection that i use f
 ndvi_crop_RC # call the object to see if it's all right
 
 # class      : RasterBrick 
-# dimensions : 115, 176, v, 5  (nrow, ncol, ncell, nlayers)
+# dimensions : 115, 176, 20240, 5  (nrow, ncol, ncell, nlayers)
 # resolution : 0.00297619, 0.00297619  (x, y)
 # extent     : 15.65923, 16.18304, 37.9122, 38.25446  (xmin, xmax, ymin, ymax)
 # crs        : +proj=longlat +datum=WGS84 +no_defs 
@@ -267,10 +272,15 @@ ndvi_crop_RC # call the object to see if it's all right
 # min values :  0.02400001, -0.08000000, -0.08000000, -0.06800000, -0.08000000 
 # max values :   0.9360001,   0.9360000,   0.9360000,   0.9360000,   0.9360000 
 
-# i will create two palette of color 
+# i will create a set of palette that i will use for the job
+my_col=c("white", "darkolivegreen" , "darkolivegreen4" , "limegreen" , "yellow2" , "orange2", "red", "purple")
+cl1 <- colorRampPalette(c("red", "yellow", "lightgreen"))(20) # i use the previous palette used for the tresholding
+difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color palette useful for this plot
+cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 
-plot(ndvi_crop_Cal) # to see the original file format
+plot(ndvi_crop_Cal, col = cl1) # to see the original file format
 plot(ndvi_crop_RC) # to start the job
+# this plot it's only to see the image. It's curious to see the different of the two sensor used for the detection
 
 # now i want to show ndvi time series during the wildfire event
 # i use this image to do the unsupervised classification to evaluate the difference with the postfire event
@@ -278,37 +288,30 @@ NDVI_21_2020 <-  ndvi_crop_RC[[2]]
 NDVI_01_2021 <-  ndvi_crop_RC[[3]]
 NDVI_21_2021 <-  ndvi_crop_RC[[5]]     
 
-temporal_stack<- stack(NDVI_01_2021,NDVI_11_2021,NDVI_21_2021)
+# i focus myself to the last day of the wildfire event, 21th of August
+plot(NDVI_21_2020, col = cl2)
+plot(NDVI_21_2021, col = cl2)
+# the situation is dramatically changed after the wildifire
 
-The non-vegetation pixels (<0.3) can be masked out. T
-he function calc is used to make arithmetic calculations on rasters (among others applications). 
-In this case, a function is created to select all values smaller than 0.3, and make them equal to no data (NA). T
-he resulting image will have values greater than 0.4. This process is called “Thresholding”.
-NDVI values are standardized and range between -1 to +1. Pixels having NDVI values greater than 0.4 are very probably vegetation.
+# The non-vegetation pixels (<0.4) can be masked out. 
+# The function 'calc' is used to make arithmetic calculations on rasters (among others applications). 
+# In this case, a function is created to select all values smaller than 0.4, and make them equal to no data (NA). 
+# The resulting image will have values greater than 0.4. This process is called “Thresholding”.
+# NDVI values are standardized and range between -1 to +1. Pixels having NDVI values greater than 0.4 are very probably vegetation.
 
-#  Mask out the values smaller than 0.4.
-# Cells with NDVI values greater than 0.4 are definitely vegetation. The following operation makes all cells that are perhaps not vegetation.
-veg_pre <- calc(rcrop$August_fire_01, function(x){x[x < 0.4] <- NA; return(x)})
-veg_post <- calc(rcrop$August_fire_21, function(x){x[x < 0.4] <- NA; return(x)})
+veg_pre <- calc(NDVI_01_2021, function(x){x[x < 0.4] <- NA; return(x)})
+veg_post <- calc(NDVI_21_2021, function(x){x[x < 0.4] <- NA; return(x)})
 
 par(mfrow=c(2,2))
-breakpoints <- seq(-1, 1, by=0.2)
- plot(rcrop$August_fire_01, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
- plot(rcrop$August_fire_21, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')
+
+breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axis)
+ plot(NDVI_01_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
+ plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')
  plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
  plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')     
 
-
-# i focus myself to the last day of the wildfire event, 21th of August
-
-cl1 <- colorRampPalette(c("red", "yellow", "lightgreen"))(20) # i use the previous palette used for the tresholding
-
-plot(NDVI_21_2020, col = cl1)
-plot(NDVI_21_2021, col = cl1)
-
-
 ###################################### FOR HISTOGRAM #################################################
-# Quantitative analysis.....
+# let's do a quantitative analysis.....
 # Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
 # For instance, there is a break between 0 and 1 in the histogram results above. 
 # let's see the distribution of vegetation using hist fuction that show us an histogram where the pixels are distruibuted under the bar
@@ -329,65 +332,95 @@ hist(NDVI_21_2021,
       main = "Histogram of NDVI distibution in 2021",
       col = "springgreen",
       xlab = "NDVI value")
+
+# the hist slope toward the centre in 2021
  
-# now i will see where are di
 # I make a classification to distinguish different element of the land. The year i choose is 2021.
-# For me forest have a value equal or more of 0.6 
+# Forest have a value equal or greater than 0.4 
 forest <- NDVI_21_2021 >=0.4
 forest
 plot(forest)
 
-
-# is chose a value for cropland between 0.3 and 0.4
+# I chose a value for cropland between 0.3 and 0.5
 cropland <-   NDVI_21_2021  >= 0.3 & NDVI_21_2021<0.5
 plot(cropland, col=c("white", "yellow3"))    
 cropland_n =cropland*2 # change the value to allow the plot otherwise all the value are the same and it is imposible to plot the layer
 cropland_n
 
-# for followland is under 0.30
+# For followland the value is between 0.1 and 0.3
 fallowland <- NDVI_21_2021 > 0.1 & NDVI_21_2021 <0.3
 fallowland
 plot(fallowland, col=c("white", "azure3"))
-fallowland_n <- fallowland*3    
-
-water <- NDVI_01_2021 <=0
-water
-plot(water, col=c("white", "blue3"))
-water_n <- water*4
-
+fallowland_n <- fallowland*3    # change the value which will be the correspondent color in the map
 
 par(mfrow=c(1,1))
-#plot the element altogheter
-NDVI_class <- forest + cropland_n + fallowland_n + water_n
-plot(NDVI_class)
+# Plot the element altogheter
+NDVI_class <- forest + cropland_n + fallowland_n 
 
-# this bar plot better explain the distribution of the differente class
-barplot(NDVI_class, main = "Distribution of Classified NDVI Values", names.arg = c("water","forest", "cropland", "followland"))
+# I use par function can be used to set graphical parameters. A numerical vector of the form c(bottom, left, top, right) 
+## which gives the number of lines of margin to be specified on the four sides of the plot.
+# The default is c(5, 4, 4, 2).
+par(mar = c(8, 8, 7, 9)) 
+
+plot(NDVI_class, col= cl2)
+legend(x="bottomright", inset = c(-0.45, 0),  # Coordinates (x also accepts keywords)
+       legend=c("water", "forest", "cropland","followland"), # Vector with the name of each group inset = c(-0.45, 0),
+       fill= cl2,   
+       col = cl2, 
+       xpd = TRUE)
+
+# this bar plot allow to explain the distribution of the differente class counting the pixels and assign them to each class
+pix_values <- c(pix_na,pix_1,pix_2,pix_3,pix_4,pix_5,pix_6,pix_7)
+
+vals <- getValues(NDVI_class)
+ 
+pix_na <- length(subset(vals, vals == -1))
+pix_1 <- length(subset(vals, vals == 1))
+pix_2 <- length(subset(vals, vals == 2))
+pix_3 <- length(subset(vals, vals == 3))
+pix_values <- c(pix_na,pix_1,pix_2,pix_3,pix_4)
+bp <- barplot(NDVI_class, col=cl2, main = "Number of pixels of each class", names.arg = c("Water","Forest", "Cropland", "Followland"))
+text(bp, y= 500, labels= pix_values) # The operations are performed from the magrittr packages, 
+                                     ## and the distribution of the pixels are written in a natural order: the same as the order of execution.
+
 
 # Showing the different between the day of burn and the previous year
-difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color palette useful for this plot
 vegdif <- NDVI_21_2021 - NDVI_21_2020 # make the difference
 plot(vegdif, col=difcl)
 
 # scatter plotting of this two layer
 plot(NDVI_21_2020, NDVI_21_2021)
 abline(0,1, col="red")
-             
+
+# i get some tips from my collegue and from the web
+sum(values(NDVI_21_2021), na.rm=TRUE) # Sum: returns the sum of all the values present in its arguments.
+# [1] 11137.82
+sum(values(NDVI_21_2020), na.rm=TRUE) # Values: Compute the total value
+# [1] 12278.62
+forest_cover_2021 <- sum(values(NDVI_21_2021), na.rm=TRUE) # consider the TRUE value: '0.936'
+forest_cover_2020 <- sum(values(NDVI_21_2020), na.rm=TRUE)
+dif_cover <- forest_cover_2020 - forest_cover_2021
+dif_cover
+# [1] 1140.792
+100*1140.792 #m^2 of the difference
+# [1] 342237.6 m^2 or better 3,422376 km^2 342,2376 hectares
+
+
 # Now i calculate the loss using unsupervised classification
 # This type of classification can be useful when not a lot is known about an area.
-# clustering for quantitative analisys. choose two nclass that represent the presence and the absence of vegetation
-nsuper_stack_20 <- unsuperClass(NDVI_21_2020,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
-nsuper_stack_21_21 <- unsuperClass(NDVI_21_2021,nSamples = 20240, nIter = 100,nIter = 100, norm = TRUE, clusterMap = TRUE, nClasses=2)
+# Clustering for quantitative analisys. choose two nclass that represent the presence and the absence of vegetation
 
-# plot the cluster images
+unsuper_20 <- unsuperClass(NDVI_21_2020,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+unsuper_21_21 <- unsuperClass(NDVI_21_2021,nSamples = 20240, nIter = 100, norm = TRUE, clusterMap = TRUE, nClasses=2)
+
+# Plot the cluster images
 par(mfrow=c(2,1))
-plot(nsuper_stack_20$map, main= 'Agosto 2020-21')
-plot(nsuper_stack_21_21$map, main= 'Agosto 2021-21')
+plot(unsuper_20$map, main= 'Agosto 2020-21',legend = FALSE)
+plot(unsuper_21_21$map, main= 'Agosto 2021-21',legend = FALSE)
 
-freq(nsuper_stack_20$map)
 # Generate and format frequency tables from a variable or a table, with percentages and formatting options
-freq(nsuper_stack_21_21$map)
-freq(nsuper_stack_20$map)
+freq(unsuper_21_21$map)
+freq(unsuper_20$map)
 
 #    value count
 # [1,]     1  9837
@@ -398,10 +431,10 @@ freq(nsuper_stack_21_21$map)
 #     value count
 # [1,]     1 11704
 # [2,]     2  8527
-# [3,]    NA     9
+# [3,]    NA     9 #
 
 totale <- 9837 + 10394
-totale # [1] 22098
+totale # [1] 20231
 
 
 prop_abse_2020 <- 9837/totale
@@ -419,8 +452,10 @@ prop_abse_2021
 # [1] 0.5296407 # 0,52x100 52%
 prop_pres_2021
 # [1] 0.385872  # 0.38x100 38%
-# the loss of vegetation is [(52/44)*100 - 100]% = 20%
-     
+# the loss of vegetation is between 2020 and 2021 is [(52-44)/44]% = 18,18%
+in square km are
+
+# let's do the cover extenction
 cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
 prop2020 <- c(prop_pres_2020, prop_abse_2020) # here we had create a proportion 
 prop2020
@@ -476,7 +511,8 @@ p3 <- ggplot() + geom_raster(ndvi_crop_RC,
                  scale_fill_viridis(option="magma")+ ggtitle("Aug_21_2021") +  
                  geom_sf(data = aoi_boundary,  size = 0.30, color = "white", fill=NA) + 
                  geom_sf(data = aoi_boundary1,  size = 0.30, color = "red", fill="red") +
-                 ggtitle("AOI Boundary Plot") + coord_sf()    
+                 ggtitle("AOI Boundary Plot") + coord_sf()  
+                 
 # aoi_boundary2 add the building and we can see that most of all are in the fire area. Dramatical
  p4 <- ggplot() + geom_raster(ndvi_crop_RC, 
                  mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
@@ -486,7 +522,22 @@ p3 <- ggplot() + geom_raster(ndvi_crop_RC,
                  geom_sf(data = aoi_boundary2,  size = 0.50, color = "green", fill=NA) +
                  ggtitle("AOI Boundary Plot") + coord_sf()  
 # this shapes file point out the real extention of the disaster caused by fire thaks to the job of 
-thank for the attention                     
+thank for the attention  
+
+p1 
+p2
+p3
+p4
+
+
+pdf(file = 'SHAPEFILE')
+p1 
+dev.off()
+Consideration:
+
+
+plot(ndvi_crop_Cal$Aug_01_2014,col=my_col,legend=F,box=F,axes=F, main="Cool Color")
+mapview(ndvi_crop_Cal$Aug_01_2014, col =my_col)
 
 ############################################ to put in the ppt########################################
 
