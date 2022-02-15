@@ -148,6 +148,7 @@ burned_crop # recall the object to see info and if it's all right
 # crop the stack due to the huge amount of the pixels 
 burned_crop <- crop(burned_stack, extR)
 burned_crop # recall the object to see info and if it's all right
+names(burned_crop)<- c("Fire August 10", "Fire August 20", "Fire August 31", "Cumulated FDOB value - end of season 10","Cumulated FDOB value - end of season 20", Cumulated FDOB value - end of season 20","Cumulated FDOB value - end of season 30")
 
 # i create a color palette to see better the fire area
 clBk<- colorRampPalette(c("red","black"))(10)
@@ -162,6 +163,12 @@ plot(burned_crop, col = clBk, leggend = FALSE)
 
 # The NDVI 300m V2 products are generated from Sentinel-3/OLCI V2
 # The imagery from copernicus are important to evaluate the loss of vegetation
+# NDVI 300m V2 shows good consistency with NDVI 300m V1, although a small negative
+# systematic bias was found. Where PROBA-V NDVI300 V1 tends to saturate at the maximum
+# NDVI for forest biomes, this is not the case for S3 NDVI300 V2. Spatial distribution of the
+# bias is strongly linked to vegetation densities. Users should be aware of these differences
+# when using the PROBA-V NDVI300 V1 archive as a reference for the more recent S3 NDVI300 V2 products.
+
 # i can import all the file by hand but it is so lazy...
 NDVI_2014 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc")
 # these images are important to evaluate the loss of vegetation 
@@ -257,7 +264,7 @@ names(ndvi_stack)<- c("Aug_01_2014", "Aug_21_2020", "Aug_01_2021", "Aug_11_2021"
 
 # Crop the area of interest, also due to the huge amount of pixels, using the previous extention created.
 
-ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria one time
+ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria only one time
 ndvi_crop_RC <- crop(ndvi_stack, extReggio) # this is the extection that i use for the rest of my job
 
 ndvi_crop_RC # call the object to see if it's all right
@@ -278,20 +285,21 @@ cl1 <- colorRampPalette(c("red", "yellow", "lightgreen"))(20) # i use the previo
 difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color palette useful for this plot
 cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 
-plot(ndvi_crop_Cal, col = cl1) # to see the original file format
-plot(ndvi_crop_RC) # to start the job
-# this plot it's only to see the image. It's curious to see the different of the two sensor used for the detection
-
-# now i want to show ndvi time series during the wildfire event
-# i use this image to do the unsupervised classification to evaluate the difference with the postfire event
+plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
+plot(ndvi_crop_RC, col= cl1) # To start the job
+# This plot it's only to see the image. It's curious to see the different densieties of the two sensor used for the detection from the '14s image
+2
+# Now i want to show ndvi time series during the wildfire event
+# I use this image to do the unsupervised classification to evaluate the difference with the postfire event
 NDVI_21_2020 <-  ndvi_crop_RC[[2]]
 NDVI_01_2021 <-  ndvi_crop_RC[[3]]
 NDVI_21_2021 <-  ndvi_crop_RC[[5]]     
 
-# i focus myself to the last day of the wildfire event, 21th of August
-plot(NDVI_21_2020, col = cl2)
-plot(NDVI_21_2021, col = cl2)
-# the situation is dramatically changed after the wildifire
+# I focused myself to the last day of the wildfire event, 21th of August
+par(mfrow=c(2,1))
+plot(NDVI_21_2020, col = my_col)
+plot(NDVI_21_2021, col = my_col)
+# The situation is dramatically changed after the wildifire...
 
 # The non-vegetation pixels (<0.4) can be masked out. 
 # The function 'calc' is used to make arithmetic calculations on rasters (among others applications). 
@@ -529,13 +537,12 @@ p2
 p3
 p4
 
-
-pdf(file = 'SHAPEFILE')
-p1 
+# To export all the graph i use png ext. 
+png('name_of_file')
+'code'
 dev.off()
-Consideration:
 
-
+# These are just funny stuff
 plot(ndvi_crop_Cal$Aug_01_2014,col=my_col,legend=F,box=F,axes=F, main="Cool Color")
 mapview(ndvi_crop_Cal$Aug_01_2014, col =my_col)
 
