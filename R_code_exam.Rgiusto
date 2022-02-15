@@ -37,8 +37,8 @@ library(magrittr)
 
 setwd("/Users/macdisimonegatto/Desktop/lab/project") #setting the working directory
 
-# import all the files of the burned area
-# i create a list of files
+# Import all the files of the burned area
+# I create a list of files
 
 burned_list <- list.files(pattern="BA300")
 burned_list
@@ -51,7 +51,7 @@ burned_list
 # [6] "c_gls_BA300-FDOB-SEASON_202108310000_CUSTOM_S3_V1.2.1.tiff"
 
 
-# I will create a list of raster images using the the lapply function
+# I use the lapply function to assign to each images the raster function
 burned_lapply <- lapply(burned_list, raster)
 burned_lapply
 
@@ -288,7 +288,7 @@ cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
 plot(ndvi_crop_RC, col= cl1) # To start the job
 # This plot it's only to see the image. It's curious to see the different densieties of the two sensor used for the detection from the '14s image
-2
+
 # Now i want to show ndvi time series during the wildfire event
 # I use this image to do the unsupervised classification to evaluate the difference with the postfire event
 NDVI_21_2020 <-  ndvi_crop_RC[[2]]
@@ -300,6 +300,8 @@ par(mfrow=c(2,1))
 plot(NDVI_21_2020, col = my_col)
 plot(NDVI_21_2021, col = my_col)
 # The situation is dramatically changed after the wildifire...
+
+########################################################THRESHOLDING###########################################################
 
 # The non-vegetation pixels (<0.4) can be masked out. 
 # The function 'calc' is used to make arithmetic calculations on rasters (among others applications). 
@@ -318,7 +320,7 @@ breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axi
  plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
  plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire')     
 
-###################################### FOR HISTOGRAM #################################################
+#######################################################HISTOGRAM ############################################################
 # let's do a quantitative analysis.....
 # Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
 # For instance, there is a break between 0 and 1 in the histogram results above. 
@@ -343,6 +345,9 @@ hist(NDVI_21_2021,
 
 # the hist slope toward the centre in 2021
  
+ 
+####################################################### CLASSIFICATION ############################################################
+
 # I make a classification to distinguish different element of the land. The year i choose is 2021.
 # Forest have a value equal or greater than 0.4 
 forest <- NDVI_21_2021 >=0.4
@@ -362,10 +367,10 @@ plot(fallowland, col=c("white", "azure3"))
 fallowland_n <- fallowland*3    # change the value which will be the correspondent color in the map
 
 par(mfrow=c(1,1))
-# Plot the element altogheter
+# Combine the element altogheter
 NDVI_class <- forest + cropland_n + fallowland_n 
 
-# I use par function can be used to set graphical parameters. A numerical vector of the form c(bottom, left, top, right) 
+# I use par function. It can be used to set graphical parameters. 'mar' -> A numerical vector of the form c(bottom, left, top, right) 
 ## which gives the number of lines of margin to be specified on the four sides of the plot.
 # The default is c(5, 4, 4, 2).
 par(mar = c(8, 8, 7, 9)) 
@@ -377,9 +382,7 @@ legend(x="bottomright", inset = c(-0.45, 0),  # Coordinates (x also accepts keyw
        col = cl2, 
        xpd = TRUE)
 
-# this bar plot allow to explain the distribution of the differente class counting the pixels and assign them to each class
-pix_values <- c(pix_na,pix_1,pix_2,pix_3,pix_4,pix_5,pix_6,pix_7)
-
+# This bar plot allow to explain the distribution of the different class counting the pixels and assign them to each class
 vals <- getValues(NDVI_class)
  
 pix_na <- length(subset(vals, vals == -1))
@@ -388,35 +391,42 @@ pix_2 <- length(subset(vals, vals == 2))
 pix_3 <- length(subset(vals, vals == 3))
 pix_values <- c(pix_na,pix_1,pix_2,pix_3,pix_4)
 bp <- barplot(NDVI_class, col=cl2, main = "Number of pixels of each class", names.arg = c("Water","Forest", "Cropland", "Followland"))
-text(bp, y= 500, labels= pix_values) # The operations are performed from the magrittr packages, 
-                                     ## and the distribution of the pixels are written in a natural order: the same as the order of execution.
+text(bp, y= 500, labels= pix_values) 
+# The operations are performed from the magrittr packages, and the distribution of the pixels are written in a natural order: the same as the order of execution.
 
 
-# Showing the different between the day of burn and the previous year
+####################################################### DIFFERENCE ############################################################
+
+# Showing the difference between the last day of burn and the previous year
 vegdif <- NDVI_21_2021 - NDVI_21_2020 # make the difference
 plot(vegdif, col=difcl)
 
-# scatter plotting of this two layer
+# Scatter plotting of this two layer
 plot(NDVI_21_2020, NDVI_21_2021)
 abline(0,1, col="red")
 
-# i get some tips from my collegue and from the web
+# I get some tips, from the github of my collegue and from the web, to undestand how calculate the pixels value that is TRUE
 sum(values(NDVI_21_2021), na.rm=TRUE) # Sum: returns the sum of all the values present in its arguments.
 # [1] 11137.82
 sum(values(NDVI_21_2020), na.rm=TRUE) # Values: Compute the total value
 # [1] 12278.62
+
 forest_cover_2021 <- sum(values(NDVI_21_2021), na.rm=TRUE) # consider the TRUE value: '0.936'
 forest_cover_2020 <- sum(values(NDVI_21_2020), na.rm=TRUE)
+
 dif_cover <- forest_cover_2020 - forest_cover_2021
 dif_cover
 # [1] 1140.792
-100*1140.792 #m^2 of the difference
-# [1] 342237.6 m^2 or better 3,422376 km^2 342,2376 hectares
+300*1140.792 #m^2 of the difference
+# [1] 342237.6 m^2 342237.6x0.0003= 102.6713km^2 or 10240 hectares
+# This value does not only consider the burned area. Anyway, it is an enormous amount of lost vegetation.
 
 
 # Now i calculate the loss using unsupervised classification
 # This type of classification can be useful when not a lot is known about an area.
 # Clustering for quantitative analisys. choose two nclass that represent the presence and the absence of vegetation
+
+####################################################### UNSUPERCLASS ############################################################
 
 unsuper_20 <- unsuperClass(NDVI_21_2020,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
 unsuper_21_21 <- unsuperClass(NDVI_21_2021,nSamples = 20240, nIter = 100, norm = TRUE, clusterMap = TRUE, nClasses=2)
@@ -439,11 +449,11 @@ freq(nsuper_stack_21_21$map)
 #     value count
 # [1,]     1 11704
 # [2,]     2  8527
-# [3,]    NA     9 #
+# [3,]    NA     9 
 
 totale <- 9837 + 10394
-totale # [1] 20231
-
+totale
+# [1] 20231
 
 prop_abse_2020 <- 9837/totale
 prop_pres_2020 <- 10394/totale
@@ -463,7 +473,7 @@ prop_pres_2021
 # the loss of vegetation is between 2020 and 2021 is [(52-44)/44]% = 18,18%
 in square km are
 
-# let's do the cover extenction
+# Let's calculate the cover extenction
 cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
 prop2020 <- c(prop_pres_2020, prop_abse_2020) # here we had create a proportion 
 prop2020
@@ -474,17 +484,17 @@ prop2021_21
 
 proportion2020 <- data.frame(cover, prop2020)
 proportion2020
-#         cover  prop2020
+#        cover  prop2020
 # 1    presence 0.4703593
 # 2     absence 0.4451534
 
 proportion2021_21 <- data.frame(cover, prop2021_21)
 proportion2021_21
-#         cover  prop2021.21
+#        cover  prop2021.21
 # 1    presence 0.3858720
 # 2     absence 0.5296407
 
-#use ggplot and patchwork to plot 
+# I've Used ggplot and patchwork to plot the Histogram
 prop1 <- ggplot(proportion2020, aes(x=cover, y=prop2020, color=cover)) + geom_bar(stat="identity", fill="white")
 prop2 <- ggplot(proportion2021_21, aes(x=cover, y=prop2021_21, color=cover)) + geom_bar(stat="identity", fill="white")
 
@@ -492,13 +502,14 @@ prop2 <- ggplot(proportion2021_21, aes(x=cover, y=prop2021_21, color=cover)) + g
 prop1 / prop2
 
 ################################## Qualitative analysis ################################
+
 # Ok, now i decide to show better the area of interest using bowndary shape find out in copernicus site about the day of burn
 # I import from a folder renamed calabria situated in the lab folder 
 aoi_boundary <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_areaOfInterestA_r1_v1.shp") # this is the shape of the area of interest
 aoi_boundary1 <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_observedEventA_r1_v1.shp") # shapefile of different wildfire event in the AOI     
 aoi_boundary2 <-st_read("/Users/macdisimonegatto/Desktop/lab/project/calabria/EMSR534_AOI01_GRA_PRODUCT_builtUpA_r1_v1.shp") # this is the shape file from calabria folder situated in the lab folder with built up of the AOI
 
-# i use these function to see the information of these shape files
+# I use these function to see the information of these shape files
 st_geometry_type(aoi_boundary)
 st_crs(aoi_boundary)
 st_bbox(aoi_boundary)
@@ -513,7 +524,7 @@ p2 <- ggplot() + geom_raster(ndvi_crop_RC,
                  geom_sf(data = aoi_boundary,  size = 0.30, color = "white", fill=NA) + 
                  ggtitle("AOI Boundary Plot") + coord_sf()         
              
-# and this with the shape file of the observed event
+# And this with the shape file of the observed event
 p3 <- ggplot() + geom_raster(ndvi_crop_RC, 
                  mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
                  scale_fill_viridis(option="magma")+ ggtitle("Aug_21_2021") +  
@@ -521,7 +532,7 @@ p3 <- ggplot() + geom_raster(ndvi_crop_RC,
                  geom_sf(data = aoi_boundary1,  size = 0.30, color = "red", fill="red") +
                  ggtitle("AOI Boundary Plot") + coord_sf()  
                  
-# aoi_boundary2 add the building and we can see that most of all are in the fire area. Dramatical
+# Aoi_boundary2 add the building and we can see that most of all are in the fire area. Dramatical
  p4 <- ggplot() + geom_raster(ndvi_crop_RC, 
                  mapping = aes(x=x, y=y, fill= Aug_21_2021)) +  
                  scale_fill_viridis(option="magma") + ggtitle("Aug_21_2021") +  
@@ -529,9 +540,10 @@ p3 <- ggplot() + geom_raster(ndvi_crop_RC,
                  geom_sf(data = aoi_boundary1,  size = 0.30, color = "red", fill="red") +
                  geom_sf(data = aoi_boundary2,  size = 0.50, color = "green", fill=NA) +
                  ggtitle("AOI Boundary Plot") + coord_sf()  
-# this shapes file point out the real extention of the disaster caused by fire thaks to the job of 
-thank for the attention  
+# This shapes file point out the real extention of the disaster caused by fire.
+# Ground teams from other italian regions have been deployed to the affected places to estimate, in situ, the lost.
 
+# Patchwork
 p1 
 p2
 p3
@@ -542,18 +554,14 @@ png('name_of_file')
 'code'
 dev.off()
 
-# These are just funny stuff
+################################################### FUNNY STUFF ########################################################
+
+
 plot(ndvi_crop_Cal$Aug_01_2014,col=my_col,legend=F,box=F,axes=F, main="Cool Color")
 mapview(ndvi_crop_Cal$Aug_01_2014, col =my_col)
 
-############################################ to put in the ppt########################################
 
-NDVI 300m V2 shows good consistency with NDVI 300m V1, although a small negative
-systematic bias was found. Where PROBA-V NDVI300 V1 tends to saturate at the maximum
-NDVI for forest biomes, this is not the case for S3 NDVI300 V2. Spatial distribution of the
-bias is strongly linked to vegetation densities. Users should be aware of these differences
-when using the PROBA-V NDVI300 V1 archive as a reference for the more recent S3
-NDVI300 V2 products.
+
 
 
 
