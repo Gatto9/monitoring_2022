@@ -1,9 +1,9 @@
 
 
-This is my job. Thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
-The flames have restarted in the Aspromonte Mountain around the San Luca Valley, a little land of 3hundred, where there are the Unesco heritage beech trees called Faggete Vetuste. 
-Ground teams from other italian regions have been deployed to the affected places, as well several Canadairs and helicopters. 
-The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca.
+# This is my job. Thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
+# The flames have restarted in the Aspromonte Mountain around the San Luca Valley, a little land of 3hundred, where there are the Unesco heritage beech trees called Faggete Vetuste. 
+# Ground teams from other italian regions have been deployed to the affected places, as well several Canadairs and helicopters. 
+# The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca.
 
 
 # install.packages("raster")
