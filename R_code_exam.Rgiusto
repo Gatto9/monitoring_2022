@@ -9,18 +9,20 @@ The area of my interest is situated in province of Reggio Calabria, a little lan
 
 # install.packages("raster")
 # install.packages("rgdal")
-# install.packages("RStoolbox")
-# install.packages("ggplot2")
-# install.packages("viridis")
-# install.packages("ncdf4")
-# install.packages("patchwork")
+# install.packages("RStoolbox")# classification: RStoolbox is a Collection of Remote Sensing Tools
+                               # The RStoolbox package provides a set of functions which simplify performing standard remote sensing tasks in R.
+# install.packages("ggplot2") # ggplot can be used to declare the input data frame for a graphic
+# install.packages("viridis") # package to choose color
+# install.packages("ncdf4") # provides an high-level R interface to data file written using Unidata's netCDF library
+# install.packages("patchwork") # patchwork' is a package that expands the API to allow for arbitrarily complex composition of plots by, among others, 
+                                ## providing mathematical operators for combining multiple plots.
 # install.packages("sf") # useful to open and manage shapefile
 # install.packages("RColorBrewer").  col=brewer.pal(5, 'RdYlGn'))
-# install.packages('mapview')
+# install.packages('mapview') # mapview provides functions to very quickly and conveniently create interactive visualisations of spatial data.
 # install.packages("magrittr") # The magrittr package offers a set of operators which make your code more readable by:
                                ## structuring sequences of data operations left-to-right
-                               The operations are performed to arrive at the desired data set, 
-                               and they are written in a natural order: the same as the order of execution.
+                               ### The operations are performed to arrive at the desired data set, 
+                               #### and they are written in a natural order: the same as the order of execution.
 
 
 library(raster)
@@ -32,10 +34,10 @@ library(patchwork)
 library(RColorBrewer)
 library(ncdf4)
 library(sf)
-library(mapview) # I get this from the code of fabio castelli 
+library(mapview) # I get this from the code of Fabio Castelli 
 library(magrittr)
 
-setwd("/Users/macdisimonegatto/Desktop/lab/project") #setting the working directory
+setwd("/Users/macdisimonegatto/Desktop/lab/project") # Setting the working directory
 
 # Import all the files of the burned area
 # I create a list of files
@@ -136,26 +138,26 @@ burned_stack
 # max values :                 65535,                 65535,                 65535,                 65535,                 65535,                 65535 
 
 
-# i create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
+# I create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
 extCal <- c(15.5997, 16.40327, 37.84673, 38.4003) # i use this extention to see the province of Reggio Calabria one time
 extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection that i use for the rest of my job
 
 
-# crop the stack due to the huge amount of the pixels
+# Crop the stack due to the huge amount of the pixels
 burned_crop <- crop(burned_stack, extCal)
 burned_crop # recall the object to see info and if it's all right
 
-# crop the stack due to the huge amount of the pixels 
+# Crop the stack due to the huge amount of the pixels 
 burned_crop <- crop(burned_stack, extR)
 burned_crop # recall the object to see info and if it's all right
-names(burned_crop)<- c("Fire August 10", "Fire August 20", "Fire August 31", "Cumulated FDOB value - end of season 10","Cumulated FDOB value - end of season 20", Cumulated FDOB value - end of season 20","Cumulated FDOB value - end of season 30")
+names(burned_crop)<- c("Fire August 10", "Fire August 20", "Fire August 31", "FDOB - end of season 10","FDOB - end of season 20", FDOB - end of season 20","FDOB - end of season 30")
 
-# i create a color palette to see better the fire area
+# I create a color palette to see better the fire area
 clBk<- colorRampPalette(c("red","black"))(10)
 
 plot(burned_crop, col = clBk, leggend = FALSE) 
-# in these images we can see that different fires are active at the same time but in different place. the fires start from deep of the forest, where the fire track can't go.
-# so for this reason the firefigher had had difficult to extinguish the fire.
+# In these images we can see that different fires are active at the same time but in different place. the fires start from deep of the forest, where the fire track can't go.
+# So for this reason the firefigher had had difficult to extinguish the fire.
 
 
 ################################################ NDVI EVALUATION #########################################################
@@ -174,7 +176,7 @@ NDVI_2014 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc")
 # these images are important to evaluate the loss of vegetation 
 
 
-#  i can create a list from a common name through the list file function
+#  I can create a list from a common name through the list file function
 ndvi_list <- list.files(pattern="NDVI300")
 ndvi_list # recall the list to have a look with the files
 
@@ -185,7 +187,7 @@ ndvi_list # recall the list to have a look with the files
 # [5] "c_gls_NDVI300_2021_08_210000_GLOBE_OLCI_V2.0.1.nc" 
 
 
-# applying raster function to every image for better and fast analysis
+# Applying raster function to every image for better and fast analysis
 ndvi_rast <- lapply(ndvi_list, raster)
 ndvi_rast
 
@@ -244,7 +246,7 @@ ndvi_rast
 # zvar       : NDVI 
 
 
-# creation of a stack of these rasterlayer 
+# Creation of a stack of these rasterlayer 
 ndvi_stack <- stack(ndvi_rast)
 ndvi_stack
 
