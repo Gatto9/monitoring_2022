@@ -1,9 +1,8 @@
 
 
-This is my job. thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
+This is my job. Thank you for your whatching. My purpose today is analyze but specialy show a disaster that has been hidden from eyes of everybody.
 The flames have restarted in the Aspromonte Mountain around the San Luca Valley, a little land of 3hundred, where there are the Unesco heritage beech trees called Faggete Vetuste. 
 Ground teams from other italian regions have been deployed to the affected places, as well several Canadairs and helicopters. 
-Thanks to the job of copernicus project i was able to work for all of us.
 The area of my interest is situated in province of Reggio Calabria, a little land of 3hundred of abitant named San Luca.
 
 
@@ -17,7 +16,7 @@ The area of my interest is situated in province of Reggio Calabria, a little lan
 # install.packages("patchwork") # patchwork' is a package that expands the API to allow for arbitrarily complex composition of plots by, among others, 
                                 ## providing mathematical operators for combining multiple plots.
 # install.packages("sf") # useful to open and manage shapefile
-# install.packages("RColorBrewer").  col=brewer.pal(5, 'RdYlGn'))
+# install.packages("RColorBrewer") 
 # install.packages('mapview') # mapview provides functions to very quickly and conveniently create interactive visualisations of spatial data.
 # install.packages("magrittr") # The magrittr package offers a set of operators which make your code more readable by:
                                ## structuring sequences of data operations left-to-right
