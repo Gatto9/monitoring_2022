@@ -371,7 +371,7 @@ fallowland_n <- fallowland*3    # change the value which will be the corresponde
 
 par(mfrow=c(1,1))
 # Combine the element altogheter
-NDVI_class <- forest + cropland_n + fallowland_n 
+NDVI_class <- water + forest + cropland_n + fallowland_n 
 
 # I use par function. It can be used to set graphical parameters. 'mar' -> A numerical vector of the form c(bottom, left, top, right) 
 ## which gives the number of lines of margin to be specified on the four sides of the plot.
@@ -380,7 +380,7 @@ par(mar = c(8, 8, 7, 9))
 
 plot(NDVI_class, col= cl2)
 legend(x="bottomright", inset = c(-0.45, 0),  # Coordinates (x also accepts keywords)
-       legend=c("water", "forest", "cropland","followland"), # Vector with the name of each group inset = c(-0.45, 0),
+       legend=c("water", "forest", "cropland","fallowland"), # Vector with the name of each group inset = c(-0.45, 0),
        fill= cl2,   
        col = cl2, 
        xpd = TRUE)
@@ -392,8 +392,9 @@ pix_na <- length(subset(vals, vals == -1))
 pix_1 <- length(subset(vals, vals == 1))
 pix_2 <- length(subset(vals, vals == 2))
 pix_3 <- length(subset(vals, vals == 3))
-pix_values <- c(pix_na,pix_1,pix_2,pix_3,pix_4)
-bp <- barplot(NDVI_class, col=cl2, main = "Number of pixels of each class", names.arg = c("Water","Forest", "Cropland", "Followland"))
+
+pix_values <- c(pix_na , pix_1 , pix_2 , pix_3)
+bp <- barplot(NDVI_class, col=cl2, main = "Number of pixels of each class", names.arg = c("Water" , "Forest" , "Cropland", "Fallowland"))
 text(bp, y= 500, labels= pix_values) 
 # The operations are performed from the magrittr packages, and the distribution of the pixels are written in a natural order: the same as the order of execution.
 
