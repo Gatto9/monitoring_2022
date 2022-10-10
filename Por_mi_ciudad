@@ -1,0 +1,78 @@
+# Bueno, voy a hacer esto codigo para mi ciudad y por todas la plantas, los arboles que estan en el Aspromonte
+# voy a ver el estado de salud de la flora usando el NDVI. El Aspromonte es uno de los pulmones de Italia
+
+# install.packages("raster")
+# install.packages("rgdal")
+# install.packages("RStoolbox")
+# install.packages("ggplot2") # ggplot can be used to declare the input data frame for a graphic
+# install.packages("viridis") # package to choose color
+# install.packages("ncdf4") # provides an high-level R interface to data file written using Unidata's netCDF library
+# install.packages("patchwork") # patchwork' is a package that expands the API to allow for arbitrarily complex composition of plots by, among others, 
+                                ## providing mathematical operators for combining multiple plots.
+# install.packages("sf") # useful to open and manage shapefile
+# install.packages("RColorBrewer") 
+# install.packages('mapview') # mapview provides functions to very quickly and conveniently create interactive visualisations of spatial data.
+# install.packages("magrittr") # The magrittr package offers a set of operators which make your code more readable by:
+
+library(raster)
+library(rgdal)
+library(RStoolbox)
+library(ggplot2)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(ncdf4)
+library(sf)
+library(mapview)
+library(magrittr)
+
+setwd("/Users/macdisimonegatto/Desktop/calabria") # I'm setting the working directory
+
+# I create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
+ndvi_list <- list.files(pattern="NDVI300")
+nvdi_list
+
+extCal <- c(15.5997, 16.40327, 37.84673, 38.4003) # i use this extention to see the province of Reggio Calabria one time
+extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection that i use for the rest of my job
+
+ndvi_rast <- lapply(ndvi_list, raster)
+
+# Applying raster function to every image for better and fast analysis
+ndvi_rast <- lapply(ndvi_list, raster)
+ndvi_rast
+
+ndvi_stack <- stack(ndvi_rast)
+ndvi_stack
+png('ndvi_stack')
+
+
+names(ndvi_stack)<- c("July_2022", "Aug_10_2021")
+
+ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria
+ndvi_crop_Cal
+
+
+################################## COLOUR ###########################################
+# i will create a set of palette that i will use for the job
+my_col=c("white" , "red" , "yellow2" , "darkolivegreen1" , "limegreen" , "darkolivegreen4", "darkolivegreen", "black")
+cl1 <- colorRampPalette(c("red", "yellow", "lightgreen"))(20) # i use the previous palette used for the tresholding
+difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color palette useful for this plot
+cl2 <- (col=brewer.pal(4, 'RdYlGn'))
+########################################################################################
+
+plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
+
+# renamed
+NDVI_07_2022 <-  ndvi_crop_Cal[[1]]
+NDVI_08_2022 <-  ndvi_crop_Cal[[2]]
+
+par(mfrow=c(2,1))
+# plotting situtation of this year
+plot(NDVI_07_2022, col = my_col)
+plot(NDVI_08_2022, col = my_col)
+
+
+
+
+
+
