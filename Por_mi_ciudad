@@ -14,6 +14,7 @@
 # install.packages('mapview') # mapview provides functions to very quickly and conveniently create interactive visualisations of spatial data.
 # install.packages("magrittr") # The magrittr package offers a set of operators which make your code more readable by:
 
+# opening all the library
 library(raster)
 library(rgdal)
 library(RStoolbox)
@@ -28,19 +29,22 @@ library(magrittr)
 
 setwd("/Users/macdisimonegatto/Desktop/calabria") # I'm setting the working directory
 
-# I create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
+# creating a list file of NDVI dataset
 ndvi_list <- list.files(pattern="NDVI300")
-nvdi_list
+ndvi_list
 
+# I create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
 extCal <- c(15.5997, 16.40327, 37.84673, 38.4003) # i use this extention to see the province of Reggio Calabria one time
 extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection that i use for the rest of my job
 
+# apply the raster function to each data
 ndvi_rast <- lapply(ndvi_list, raster)
 
 # Applying raster function to every image for better and fast analysis
 ndvi_rast <- lapply(ndvi_list, raster)
 ndvi_rast
 
+# stacking the files to work
 ndvi_stack <- stack(ndvi_rast)
 ndvi_stack
 png('ndvi_stack')
@@ -48,7 +52,8 @@ png('ndvi_stack')
 
 names(ndvi_stack)<- c("July_2022", "Aug_10_2021")
 
-ndvi_crop_Cal <- crop(ndvi_stack, extCal) # i use this extention to see the province of Reggio Calabria
+# i use this extention to see the province of Reggio Calabria
+ndvi_crop_Cal <- crop(ndvi_stack, extCal) 
 ndvi_crop_Cal
 
 
@@ -62,15 +67,45 @@ cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 
 plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
 
-# renamed
+# renamed the files
 NDVI_07_2022 <-  ndvi_crop_Cal[[1]]
 NDVI_08_2022 <-  ndvi_crop_Cal[[2]]
 
-par(mfrow=c(2,1))
 # plotting situtation of this year
+par(mfrow=c(2,1))
 plot(NDVI_07_2022, col = my_col)
 plot(NDVI_08_2022, col = my_col)
 
+
+####################################### HISTOGRAM ########################################
+# let's do a quantitative analysis.....
+# Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
+# For instance, there is a break between 0 and 1 in the histogram results above. 
+# let's see the distribution of vegetation using hist fuction that show us an histogram where the pixels are distruibuted under the bar
+par(mfrow=c(2,1))
+hist(NDVI_07_2022,
+      xlim = c(-0.080, 0.936),
+      ylim = c(0, 3000),
+      breaks = 20,
+      main = "Histogram of NDVI distribution in 2020",
+      col = "springgreen",
+      xlab = "NDVI value")
+
+hist(NDVI_08_2022,
+      xlim = c(-0.080, 0.936),
+      ylim = c(0, 3000),
+      breaks = 20,
+      main = "Histogram of NDVI distibution in 2021",
+      col = "springgreen",
+      xlab = "NDVI value")
+      
+############################################# DIFFERENCE ##########################################
+# Showing the difference between the last day of burn and the previous year
+vegdif <- NDVI_21_2021 - NDVI_21_2020 # make the difference
+plot(vegdif, col=difcl)
+# Scatter plotting of this two layer
+plot(NDVI_21_2020, NDVI_21_2021)
+abline(0,1, col="red")
 
 
 
