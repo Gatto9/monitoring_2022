@@ -88,7 +88,7 @@ hist(NDVI_07_2022,
       ylim = c(0, 3000),
       breaks = 20,
       main = "Histogram of NDVI distribution in 2020",
-      col = "springgreen",
+      col = "my_col",
       xlab = "NDVI value")
 
 hist(NDVI_08_2022,
@@ -96,7 +96,7 @@ hist(NDVI_08_2022,
       ylim = c(0, 3000),
       breaks = 20,
       main = "Histogram of NDVI distibution in 2021",
-      col = "springgreen",
+      col = "my_col",
       xlab = "NDVI value")
       
 ############################################# DIFFERENCE ##########################################
