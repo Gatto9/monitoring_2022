@@ -50,7 +50,7 @@ ndvi_stack
 png('ndvi_stack')
 
 
-names(ndvi_stack)<- c("July_2022", "Aug_10_2021")
+names(ndvi_stack)<- c("July_2022" , "Aug_10_2021" , "Aug_21_2021")
 
 # i use this extention to see the province of Reggio Calabria
 ndvi_crop_Cal <- crop(ndvi_stack, extCal) 
@@ -68,13 +68,16 @@ cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
 
 # renamed the files
-NDVI_07_2022 <-  ndvi_crop_Cal[[1]]
-NDVI_08_2022 <-  ndvi_crop_Cal[[2]]
+NDVI_01_07_2022 <-  ndvi_crop_Cal[[1]]
+NDVI_11_08_2022 <-  ndvi_crop_Cal[[2]]
+NDVI_21_08_2022 <-  ndvi_crop_Cal[[3]]
+
 
 # plotting situtation of this year
-par(mfrow=c(2,1))
-plot(NDVI_07_2022, col = my_col)
-plot(NDVI_08_2022, col = my_col)
+par(mfrow=c(3,1))
+plot(NDVI_01_07_2022, col = my_col)
+plot(NDVI_11_08_2022, col = my_col)
+plot(NDVI_21_08_2022, col = my_col)
 
 
 ####################################### HISTOGRAM ########################################
@@ -82,30 +85,58 @@ plot(NDVI_08_2022, col = my_col)
 # Each bin represents a bar on your histogram plot. Each bar represents the frequency or number of pixels that have a value within that bin.
 # For instance, there is a break between 0 and 1 in the histogram results above. 
 # let's see the distribution of vegetation using hist fuction that show us an histogram where the pixels are distruibuted under the bar
-par(mfrow=c(2,1))
-hist(NDVI_07_2022,
+par(mfrow=c(3,1))
+hist(NDVI_01_07_2022,
       xlim = c(-0.080, 0.936),
       ylim = c(0, 3000),
       breaks = 20,
       main = "Histogram of NDVI distribution in 2020",
-      col = "my_col",
+      col = "springgreen",
       xlab = "NDVI value")
 
-hist(NDVI_08_2022,
+hist(NDVI_11_08_2022,
       xlim = c(-0.080, 0.936),
       ylim = c(0, 3000),
       breaks = 20,
       main = "Histogram of NDVI distibution in 2021",
-      col = "my_col",
+      col = "springgreen",
+      xlab = "NDVI value")
+      
+hist(NDVI_21_08_2022,
+      xlim = c(-0.080, 0.936),
+      ylim = c(0, 3000),
+      breaks = 20,
+      main = "Histogram of NDVI distibution in 2021",
+      col = "springgreen",
       xlab = "NDVI value")
       
 ############################################# DIFFERENCE ##########################################
 # Showing the difference between the last day of burn and the previous year
-vegdif <- NDVI_21_2021 - NDVI_21_2020 # make the difference
+vegdif <- NDVI_01_07_2022 - NDVI_21_08_2022 # make the difference between the first detective day and the last
 plot(vegdif, col=difcl)
+
 # Scatter plotting of this two layer
-plot(NDVI_21_2020, NDVI_21_2021)
+plot(NDVI_01_07_2022, NDVI_21_2022)
 abline(0,1, col="red")
+
+# Difference between the last year and the current years
+# Recall the data from the previous year
+
+NDVI_2021 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc") #DA CORREGGERE PERCHE NON è QUESTO
+
+vegdif <- NDVI_2021 - NDVI_21_08_2022
+
+# Evaluation of the pixel value that are TRUE to understand the lost on vegetation throug the years
+sum(values(NDVI_01_07_2022), na.rm=TRUE)
+#
+sum(values(NDVI_11_08_2022), na.rm=TRUE)
+#
+sum(values(NDVI_21_08_2022), na.rm=TRUE)
+#
+
+300*1140.792 #m^2 of the difference
+
+
 
 
 
