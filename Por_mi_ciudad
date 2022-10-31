@@ -116,19 +116,11 @@ plot(vegdif, col=difcl)
 plot(NDVI_01_07_2022, NDVI_21_08_2022)
 abline(0,1, col="red")
 
+
+
 # Difference between the last year and the current years
 # Recall the data from the previous year
 
-
-vegdif <- NDVI_2021 - NDVI_21_08_2022
-
-# Evaluation of the pixel value that are TRUE to understand the lost on vegetation throug the years
-sum(values(NDVI_01_07_2022), na.rm=TRUE)
-#
-sum(values(NDVI_11_08_2022), na.rm=TRUE)
-#
-sum(values(NDVI_21_08_2022), na.rm=TRUE)
-#
 
 300*1140.792 #m^2 of the difference
 
@@ -137,13 +129,13 @@ sum(values(NDVI_21_08_2022), na.rm=TRUE)
 veg_pre <- calc(NDVI_01_2021, function(x){x[x < 0.4] <- NA; return(x)})
 veg_post <- calc(NDVI_21_2021, function(x){x[x < 0.4] <- NA; return(x)})
 
-par(mfrow=c(2,2))
-breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axis)
- plot(NDVI_01_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
- plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Post-Fire')
+# par(mfrow=c(2,2))
+# breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axis)
+# plot(NDVI_01_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
+# plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Post-Fire')
 # Plot both NDVI outputs. In the second plot all colored pixels are very probably vegetation.
- plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
- plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire') 
+# plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
+# plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire') 
 ################################################################################################################################################
 
 
@@ -160,7 +152,6 @@ vegcropland_07 <- reclassify(NDVI_01_07_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3
 plot(vegcropland_07,col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
 vegcropland_08 <- reclassify(NDVI_21_08_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3,0.4, NA, 0.4,0.65, 4, 0.65,Inf, NA))
 plot(vegcropland_08,col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
-
 
 
 sum(values(vegforest_07), na.rm=TRUE)
@@ -181,6 +172,14 @@ sum(values(NDVI_01_07_2022), na.rm=TRUE)
 # [1] 14516.2
  sum(values(NDVI_21_08_2022), na.rm=TRUE)
 # [1] 13698.85
+# here i want to calculate the square km and the hectar lost 
+
+forest_cover_07 <- sum(values(NDVI_01_07_2022), na.rm=TRUE) # consider the TRUE value: '0.936'
+forest_cover_08 <- sum(values(NDVI_21_08_2022), na.rm=TRUE)
+
+dif_cover <- forest_cover_07 - forest_cover_08
+dif_cover
+[1] 817.352
 
 ######################################### UNSUPERCLASS #############################################
 unsuper_07 <- unsuperClass(NDVI_01_07_2022,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
