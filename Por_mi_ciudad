@@ -35,27 +35,23 @@ ndvi_list
 
 # I create two extention with the leghts of a part of calabria region and the area of interest that will be important later with NDVI
 extCal <- c(15.5997, 16.40327, 37.84673, 38.4003) # i use this extention to see the province of Reggio Calabria one time
-extReggio <- c(15.6589, 16.18244, 37.91141, 38.25393) # this is the extection that i use for the rest of my job
+extReggio <- c(15.6489, 16.18244, 37.91141, 38.30393) # this is the extection that i use for the rest of my job
 
-# apply the raster function to each data
-ndvi_rast <- lapply(ndvi_list, raster)
 
 # Applying raster function to every image for better and fast analysis
 ndvi_rast <- lapply(ndvi_list, raster)
 ndvi_rast
 
-# stacking the files to work
+
+# Stacking the files to work
 ndvi_stack <- stack(ndvi_rast)
 ndvi_stack
-png('ndvi_stack')
 
-
-names(ndvi_stack)<- c("July_2022" , "Aug_10_2021" , "Aug_21_2021")
 
 # i use this extention to see the province of Reggio Calabria
-ndvi_crop_Cal <- crop(ndvi_stack, extCal) 
+ndvi_crop_Cal <- crop(ndvi_stack, extReggio) 
 ndvi_crop_Cal
-
+names(ndvi_crop_Cal)<- c("July_2022" , "Aug_10_2021" , "Aug_21_2021")
 
 ################################## COLOUR ###########################################
 # i will create a set of palette that i will use for the job
@@ -65,8 +61,6 @@ difcl <-  colorRampPalette(brewer.pal(11, "RdYlGn"))(100) # create the color pal
 cl2 <- (col=brewer.pal(4, 'RdYlGn'))
 ########################################################################################
 
-plot(ndvi_crop_Cal, col= cl1) #I chose this palette because it shows the area without vegetation very well
-
 # renamed the files
 NDVI_01_07_2022 <-  ndvi_crop_Cal[[1]]
 NDVI_11_08_2022 <-  ndvi_crop_Cal[[2]]
@@ -74,7 +68,9 @@ NDVI_21_08_2022 <-  ndvi_crop_Cal[[3]]
 
 
 # plotting situtation of this year
-par(mfrow=c(3,1))
+plot(ndvi_crop_Cal) 
+# or
+par(mfrow=c(1,3))
 plot(NDVI_01_07_2022, col = my_col)
 plot(NDVI_11_08_2022, col = my_col)
 plot(NDVI_21_08_2022, col = my_col)
@@ -112,17 +108,17 @@ hist(NDVI_21_08_2022,
       
 ############################################# DIFFERENCE ##########################################
 # Showing the difference between the last day of burn and the previous year
+
+par(mfrow=c(1,2))
 vegdif <- NDVI_01_07_2022 - NDVI_21_08_2022 # make the difference between the first detective day and the last
 plot(vegdif, col=difcl)
-
 # Scatter plotting of this two layer
-plot(NDVI_01_07_2022, NDVI_21_2022)
+plot(NDVI_01_07_2022, NDVI_21_08_2022)
 abline(0,1, col="red")
 
 # Difference between the last year and the current years
 # Recall the data from the previous year
 
-NDVI_2021 <- raster("c_gls_NDVI300_2014_08_010000_GLOBE_PROBAV_V1.0.1.nc") #DA CORREGGERE PERCHE NON è QUESTO
 
 vegdif <- NDVI_2021 - NDVI_21_08_2022
 
@@ -135,6 +131,131 @@ sum(values(NDVI_21_08_2022), na.rm=TRUE)
 #
 
 300*1140.792 #m^2 of the difference
+
+
+############################################################## THRESHOLDING ############################################################################################
+veg_pre <- calc(NDVI_01_2021, function(x){x[x < 0.4] <- NA; return(x)})
+veg_post <- calc(NDVI_21_2021, function(x){x[x < 0.4] <- NA; return(x)})
+
+par(mfrow=c(2,2))
+breakpoints <- seq(-1, 1, by=0.2) # Set up the limits of the values scale (y axis)
+ plot(NDVI_01_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Pre-Fire')
+ plot(NDVI_21_2021, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Post-Fire')
+# Plot both NDVI outputs. In the second plot all colored pixels are very probably vegetation.
+ plot(veg_pre, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold, Pre-Fire')
+ plot(veg_post, col = colorRampPalette(c("red", "yellow", "lightgreen"))(length(breakpoints)-1), breaks=breakpoints, main = 'NDVI Threshold Post-Fire') 
+################################################################################################################################################
+
+
+#evaluation density of the forest
+par(mfrow=c(2,2))
+vegforest_07 <- reclassify(NDVI_01_07_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3,0.4, NA, 0.4,0.65, NA, 0.65,Inf, 5))
+plot(vegforest_07,col = darkgreen, main = 'NDVI based thresholding')
+vegforest_08 <- reclassify(NDVI_21_08_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3,0.4, NA, 0.4,0.65, NA, 0.65,Inf, 5))
+plot(vegforest_08,col = darkgreen), main = 'NDVI based thresholding')
+
+#evaluation of cropland in the different period through the summer
+par(mfrow=c(2,2))
+vegcropland_07 <- reclassify(NDVI_01_07_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3,0.4, NA, 0.4,0.65, 4, 0.65,Inf, NA))
+plot(vegcropland_07,col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
+vegcropland_08 <- reclassify(NDVI_21_08_2022, c(-Inf,0.25, NA, 0.25,0.3, NA, 0.3,0.4, NA, 0.4,0.65, 4, 0.65,Inf, NA))
+plot(vegcropland_08,col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
+
+
+
+> sum(values(vegforest_07), na.rm=TRUE)
+[1] 52775
+> sum(values(vegforest_08), na.rm=TRUE)
+[1] 43730
+> sum(values(vegcropland_07), na.rm=TRUE)
+[1] 33448
+> sum(values(vegcropland_08), na.rm=TRUE)
+[1] 36960
+
+#from here we can understand that the there is a lost of quality on greeness. Obiously, it is summer, the warmest season in the year so this is normal to see
+# but if we consider that we have a drastic increase of the cropland this may be possible only with an antropich disturbance, due to wildefire disturbance 
+# i want to comparised these dataset with the previous job i did.
+
+
+
+######################################### UNSUPERCLASS #############################################
+unsuper_07 <- unsuperClass(NDVI_01_07_2022,nSamples = 20240, nIter = 100, norm = FALSE, clusterMap = TRUE, nClasses=2)
+unsuper_08 <- unsuperClass(NDVI_21_08_2022,nSamples = 20240, nIter = 100, norm = TRUE, clusterMap = TRUE, nClasses=2)
+
+# Plot the cluster images
+
+par(mfrow=c(2,1))
+plot(unsuper_07$map, main= 'JULY 2022-08',legend = FALSE)
+plot(unsuper_08$map, main= 'AUGUST 2022-08',legend = FALSE)
+
+# Generate and format frequency tables from a variable or a table, with percentages and formatting options
+freq(unsuper_07$map)
+     value count
+# [1,]     1 12236
+# [2,]     2 11383
+# [3,]    NA     9
+
+freq(unsuper_08$map)
+
+#  value count
+# [1,]     1 13014
+# [2,]     2 10605
+# [3,]    NA     9
+
+totale <- 12236 + 11383
+totale
+# [1] 23619
+
+
+prop_abse_2022_07 <- 12236/totale
+prop_pres_2022_07 <- 11383/totale
+
+prop_abse_2022_08<- 13014/totale
+prop_pres_2022_08<- 10605/totale
+
+
+prop_abse_2022_07 
+[1] 0.5180575 # 0,51x100 51%
+prop_abse_2022_07
+[1] 0.4819425 # 0,48x100 48%
+prop_abse_2022_08
+[1] 0.5509971 # 0,55x100 55%
+prop_abse_2022_08
+[1] 0.4490029  # 0.44x100 44%
+# the loss of vegetation among july 2022 and august 2022 is [(51-55)/51]% = 0.07843137x100 = 7,8%
+in square km are
+
+
+
+# Let's calculate the cover extenction
+cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
+prop2022_07 <- c(prop_abse_2022_07, prop_pres_2022_07) # here we had create a proportion 
+prop2022_07
+# [1] 0.5180575 0.4819425
+
+proportion2022_07 <- data.frame(cover, prop2022_07)
+proportion2022_07
+#  cover prop2022_07
+# 1 presence   0.5180575
+# 2  absence   0.4819425
+
+
+cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
+prop2022_08 <- c(prop_pres_2022_08, prop_abse_2022_08) # here we had create a proportion 
+prop2022_08
+
+proportion2022_08 <- data.frame(cover, prop2022_08)
+proportion2022_08
+#  cover prop2022_08
+# 1 presence   0.4490029
+# 2  absence   0.5509971
+
+# I've Used ggplot and patchwork to plot the Histogram
+prop1 <- ggplot(proportion2022_07, aes(x=cover, y=prop2022_07, color=cover)) + geom_bar(stat="identity", fill="black")
+prop2 <- ggplot(proportion2022_08, aes(x=cover, y=prop2022_08, color=cover)) + geom_bar(stat="identity", fill="black")
+
+#patchwork
+prop1 / prop2
 
 
 
