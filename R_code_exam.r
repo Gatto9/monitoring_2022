@@ -147,7 +147,7 @@ burned_crop <- crop(burned_stack, extCal)
 burned_crop # recall the object to see info and if it's all right
 
 # Crop the stack due to the huge amount of the pixels 
-burned_crop <- crop(burned_stack, extR)
+burned_crop <- crop(burned_stack, extReggio)
 burned_crop # recall the object to see info and if it's all right
 names(burned_crop)<- c("Fire August 10", "Fire August 20", "Fire August 31", "FDOB - end of season 10","FDOB - end of season 20", FDOB - end of season 20","FDOB - end of season 30")
 
@@ -157,6 +157,7 @@ clBk<- colorRampPalette(c("red","black"))(10)
 plot(burned_crop, col = clBk, leggend = FALSE) 
 # In these images we can see that different fires are active at the same time but in different place. the fires start from deep of the forest, where the fire track can't go.
 # So for this reason the firefigher had had difficult to extinguish the fire.
+# And this allowed the fire to move freely
 
 
 ################################################ NDVI EVALUATION #########################################################
@@ -448,7 +449,7 @@ freq(unsuper_20$map)
 # [1,]     1  9837
 # [2,]     2 10394
 # [3,]    NA     9
-freq(nsuper_stack_21_21$map)
+freq(unsuper_21_21$map)
 
 #     value count
 # [1,]     1 11704
@@ -474,7 +475,7 @@ prop_abse_2021
 # [1] 0.5296407 # 0,52x100 52%
 prop_pres_2021
 # [1] 0.385872  # 0.38x100 38%
-# the loss of vegetation is between 2020 and 2021 is [(52-44)/44]% = 18,18%
+# the loss of vegetation between 2020 and 2021 is [(52-44)/44]% = 18,18%
 in square km are
 
 # Let's calculate the cover extenction
@@ -482,15 +483,16 @@ cover <- c("presence", "absence") # cover: Replace NA values with values of othe
 prop2020 <- c(prop_pres_2020, prop_abse_2020) # here we had create a proportion 
 prop2020
 
-cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
-prop2021_21 <- c(prop_pres_2021, prop_abse_2021) # here we had create a proportion 
-prop2021_21
-
 proportion2020 <- data.frame(cover, prop2020)
 proportion2020
 #        cover  prop2020
 # 1    presence 0.4703593
 # 2     absence 0.4451534
+
+
+cover <- c("presence", "absence") # cover: Replace NA values with values of other layers
+prop2021_21 <- c(prop_pres_2021, prop_abse_2021) # here we had create a proportion 
+prop2021_21
 
 proportion2021_21 <- data.frame(cover, prop2021_21)
 proportion2021_21
